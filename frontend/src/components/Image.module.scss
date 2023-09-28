@@ -1,0 +1,76 @@
+.imageWithContentInside {
+	display: flex;
+	flex-direction: column;
+	height: 700px;
+	position: relative;
+
+	img {
+		background-color: #111;
+		height: 100%;
+		object-fit: cover;
+		width: 100%;
+	}
+
+	.content {
+		background: linear-gradient(to top, #111e, #1119);
+		backdrop-filter: blur(10px);
+		border-radius: 0 14px 14px 0;
+		bottom: 50%;
+		color: #fff;
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		left: 0;
+		max-width: 400px;
+		padding: 21px;
+		position: absolute;
+		translate: 0 50%;
+
+		h3 {
+			font-size: 32px;
+		}
+
+		p {
+			color: #fffc;
+		}
+
+		.buttons {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			gap: 14px;
+
+			button {
+				background-color: #fff2;
+
+				&:hover {
+					background-color: #fff4;
+				}
+			}
+		}
+	}
+
+	@media only screen and (max-width: 700px) {
+		height: 500px;
+
+		img {
+			flex-grow: 1;
+			height: 0;
+		}
+
+		& > .content {
+			background: linear-gradient(to top, #111 50%, #1112);
+			backdrop-filter: none;
+			border-radius: 0;
+			bottom: 0;
+			left: 0;
+			max-width: none;
+			translate: 0;
+			width: 100%;
+
+			& > .buttons {
+				flex-direction: column;
+			}
+		}
+	}
+}

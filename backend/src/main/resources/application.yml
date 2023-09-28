@@ -1,0 +1,42 @@
+spring:
+  profiles:
+    active: dev
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: micheldouglasgrigoli@gmail.com
+    password: fygjnasvvqzbryxc
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: templateDatabase
+project:
+  shortName: Template (DEV)
+  fullName: Template de Desenvolvimento (DEV)
+  supportEmail: mdgrigoli@hotmail.com.br
+  mainURL: https://meuorcamentoonline.com.br/
+  config:
+    forceInviteToCreateUser: true
+  s3:
+    accessKey: AKIA3E3DOYPW56TJYCX4
+    secretKey: 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
+    repo: meuorcamentoonline.com.br
+web:
+  cors:
+    allowed-origins: "*"
+    allowed-methods: GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD
+    max-age: 3600
+    allowed-headers: "Requestor-Type"
+    exposed-headers: "X-Get-Header"

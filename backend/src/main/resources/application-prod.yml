@@ -1,0 +1,14 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://michel:thmpv005@templateProd.ueym34d.mongodb.net/?retryWrites=true&w=majority
+      database: templateProd
+project:
+  shortName: Template
+  fullName: Template de Desenvolvimento
+  supportEmail: mdgrigoli@hotmail.com.br
+  mainURL: https://meuorcamentoonline.com.br/
+  s3:
+    accessKey: AKIA3E3DOYPW56TJYCX4
+    secretKey: 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
+    repo: meuorcamentoonline.com.br

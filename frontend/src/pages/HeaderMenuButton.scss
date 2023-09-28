@@ -1,0 +1,56 @@
+.headerMenuButton {
+	display: flex;
+	flex-direction: row;
+	gap: 14px;
+
+	.headerMenuCentered {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		height: var(--header-height);
+
+		button {
+			background-color: transparent;
+			height: calc(var(--reduced-sidebar-width) - 28px);
+			width: 100%;
+
+			&:hover {
+				background-color: #fff2;
+			}
+
+			&::before {
+				content: 'description';
+				font-size: 20px;
+				transition: all 0.25s;
+			}
+
+			&:hover::before {
+				content: 'menu_open';
+				color: var(--ACTIVE_COLOR);
+			}
+		}
+	}
+
+	&[data-reduced='true'][data-show-reduced='true'] {
+		button {
+			&:hover::before {
+				content: 'menu';
+			}
+		}
+	}
+
+	&[data-show-reduced='false'] {
+		button {
+			&:hover::before {
+				content: 'description';
+				color: #fff;
+			}
+		}
+	}
+
+	span {
+		color: #fff;
+		font-size: 18px;
+		margin: auto 0;
+	}
+}
