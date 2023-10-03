@@ -1,16 +1,19 @@
 {
-  "name": "meu-orcamento-online-backend",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
-  },
-  "license": "MIT",
-  "dependencies": {
-    "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "mongodb": "^6.1.0",
-    "prettier": "^3.0.3"
-  }
+	"name": "meu-orcamento-online-backend",
+	"version": "1.0.0",
+	"main": "app.js",
+	"type": "module",
+	"scripts": {
+		"start": "nodemon app.js",
+		"format": "prettier --write \"**/*.js\""
+	},
+	"license": "MIT",
+	"dependencies": {
+		"body-parser": "^1.20.2",
+		"express": "^4.18.2",
+		"prettier": "^3.0.3"
+	},
+	"devDependencies": {
+		"nodemon": "^3.0.1"
+	}
 }
