@@ -1,4 +1,5 @@
 import fs from 'fs'
+import { v4 as uuid } from 'uuid'
 
 export const useDatabase = (entity) => {
 	const getFileContent = () => {
@@ -24,6 +25,10 @@ export const useDatabase = (entity) => {
 		}
 	}
 
+	const findMany = ({ query = (x) => true }) => {
+		return findAll().filter(query)
+	}
+
 	const findOne = ({ query = (x) => true }) => {
 		return findAll().find(query)
 	}
@@ -31,12 +36,17 @@ export const useDatabase = (entity) => {
 	const create = ({ value, validate = () => null, onSuccess = () => {}, onError = () => {} }) => {
 		try {
 			const fileContent = getFileContent()
-			const errors = validate(value, {})
-			if (errors && Object.keys(errors).length > 0) {
-				onError?.(errors)
+			try {
+				const errors = validate(value, {})
+				if (errors && Object.keys(errors).length > 0) {
+					onError?.(errors)
+					return
+				}
+			} catch (error) {
+				onError?.(error)
 				return
 			}
-			value._id = Math.random().toString().split('.')[1]
+			value._id = uuid()
 			const content = {
 				...fileContent,
 				[entity]: [...findAll(), value],
@@ -57,9 +67,14 @@ export const useDatabase = (entity) => {
 	}) => {
 		try {
 			const fileContent = getFileContent()
-			const errors = validate(value, {})
-			if (errors && Object.keys(errors).length > 0) {
-				onError?.(errors)
+			try {
+				const errors = validate(value, {})
+				if (errors && Object.keys(errors).length > 0) {
+					onError?.(errors)
+					return
+				}
+			} catch (error) {
+				onError?.(error)
 				return
 			}
 			const changedValue = validate?.(value) || value
@@ -98,6 +113,7 @@ export const useDatabase = (entity) => {
 
 	return {
 		findAll,
+		findMany,
 		findOne,
 		create,
 		update,

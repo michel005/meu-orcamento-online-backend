@@ -1,15 +1,21 @@
 import { DateUtils } from '../../../utils/DateUtils.js'
 import { CustomerValidation } from '../../../validations/CustomerValidation.js'
 
-export const Create = (app) => {
-	app.post('/api/customer', (req, res) => {
-		req.database.customer.create({
+export const Update = (app) => {
+	app.put('/api/customer/:id', (req, res) => {
+		const findedCustomer = req.database.customer.findOne({
+			query: (x) => x._id === req.params.id && x.user_id === req.user._id,
+		})
+		req.database.customer.update({
+			id: findedCustomer._id,
 			value: {
+				...findedCustomer,
 				...req.body,
 				address: req.body?.address || {},
-				created: DateUtils.dateTimeToString(new Date()),
-				updated: undefined,
-				user_id: req.user._id,
+				updated: DateUtils.dateTimeToString(new Date()),
+				created: findedCustomer.created,
+				_id: findedCustomer._id,
+				user_id: findedCustomer.user_id,
 			},
 			validate: (value, errors) =>
 				CustomerValidation({

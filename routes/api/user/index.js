@@ -4,13 +4,12 @@ import { Create } from './create.js'
 import { Update } from './update.js'
 import { Me } from './me.js'
 import { ChangePassword } from './changePassword.js'
+import { useSchemaValidation } from '../../../hooks/useSchemaValidation.js'
 
 export const User = (app) => {
-	const database = useDatabase('user')
-
-	Login(app, database)
-	Me(app, database)
-	Create(app, database)
-	Update(app, database)
-	ChangePassword(app, database)
+	Login(app)
+	Me(app)
+	Create(app)
+	Update(app)
+	ChangePassword(app)
 }
