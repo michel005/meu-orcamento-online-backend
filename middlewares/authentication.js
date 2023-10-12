@@ -1,5 +1,6 @@
 import { AuthenticationConfiguration } from '../config/AuthenticationConfiguration.js'
 import { DateUtils } from '../utils/DateUtils.js'
+import { newError } from '../utils/ErrorUtils.js'
 
 /**
  * @param {import('express').Request} req
@@ -16,9 +17,7 @@ export const Authentication = async (req, res, next) => {
 	} else {
 		const authToken = req.headers?.auth_token
 		if (!authToken) {
-			res.status(400).send({
-				error: 'AUTH-001',
-			})
+			res.status(400).json(newError('AUTH-001'))
 		} else {
 			const findedUserToken = (
 				await req.database.user_token.findMany({
@@ -26,22 +25,16 @@ export const Authentication = async (req, res, next) => {
 				})
 			)?.[0]
 			if (!findedUserToken) {
-				res.status(400).send({
-					error: 'AUTH-002',
-				})
+				res.status(400).send(newError('AUTH-002'))
 			} else {
 				const expirationDate = DateUtils.stringToDate(findedUserToken.expiration)
 				if (new Date().getTime() > expirationDate.getTime()) {
-					res.status(400).send({
-						error: 'AUTH-003',
-					})
+					res.status(400).send(newError('AUTH-003'))
 					return
 				}
 				req.user = await req.database.user.findOne(findedUserToken.user_id)
 				if (!req.user) {
-					res.status(400).send({
-						error: 'AUTH-003',
-					})
+					res.status(400).send(newError('AUTH-003'))
 					return
 				}
 				next()

@@ -1,4 +1,5 @@
 import { UserSchema } from '../schema/UserSchema.js'
+import { newError } from '../utils/ErrorUtils.js'
 
 export const UserValidation = async ({ value, errors = {}, database }) => {
 	UserSchema.throwValidation(value)
@@ -8,14 +9,14 @@ export const UserValidation = async ({ value, errors = {}, database }) => {
 			_id: { $ne: value?._id },
 		})
 		if (findOneUserNameResult.length > 0) {
-			errors.user_name = 'DATABASE-001'
+			errors.user_name = newError('DATABASE-001')
 		}
 		const findOneEmailResult = await database.findMany({
 			email: value.email,
 			_id: { $ne: value?._id },
 		})
 		if (findOneEmailResult.length > 0) {
-			errors.email = 'DATABASE-001'
+			errors.email = newError('DATABASE-001')
 		}
 		if (Object.keys(errors).length > 0) {
 			throw errors

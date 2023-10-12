@@ -1,4 +1,5 @@
 import { useSchemaValidation } from '../../../hooks/useSchemaValidation.js'
+import { newError } from '../../../utils/ErrorUtils.js'
 
 export const ChangePassword = (app) => {
 	const schema = useSchemaValidation({
@@ -22,11 +23,11 @@ export const ChangePassword = (app) => {
 			schema.throwValidation(req.body)
 			const errors = {}
 			if (oldPassword !== req.user.password) {
-				errors.old_password = 'FIELD-003'
+				errors.old_password = newError('FIELD-003')
 			}
 			console.log('michel')
 			if (newPassword && newPasswordConfirm && newPassword !== newPasswordConfirm) {
-				errors.new_password = 'FIELD-003'
+				errors.new_password = newError('FIELD-003')
 			}
 			if (Object.keys(errors).length > 0) {
 				res.status(400).json(errors)

@@ -1,6 +1,7 @@
 import { DateUtils } from '../../../utils/DateUtils.js'
 import { v4 as uuid } from 'uuid'
 import { ObjectId } from 'mongodb'
+import { newError } from '../../../utils/ErrorUtils.js'
 
 export const Login = (app) => {
 	app.post('/api/user/login', async (req, res) => {
@@ -28,17 +29,14 @@ export const Login = (app) => {
 				})
 
 				res.status(200).json({
+					...findedUser[0],
 					token: token,
 				})
 			} else {
-				res.status(404).json({
-					error: 'AUTH-004',
-				})
+				res.status(404).json(newError('AUTH-004'))
 			}
 		} catch (error) {
-			res.status(404).json({
-				error: 'AUTH-004',
-			})
+			res.status(404).json(newError('AUTH-004'))
 		}
 	})
 }

@@ -1,3 +1,5 @@
+import { newError } from '../utils/ErrorUtils.js'
+
 /**
  * @param {{
  *     [key: string]: {
@@ -18,15 +20,15 @@ export const useSchemaValidation = (schemaValidation) => {
 			(field) => !schemaFields.includes(field)
 		)
 		for (const field of fieldsNotIncludedInSchema) {
-			errors[field] = 'SCHEMA-001'
+			errors[field] = newError('SCHEMA-001')
 		}
 
 		for (const field of schemaFields) {
 			const fieldDefinition = schema[field]
 			if (!valueFields.includes(field) && fieldDefinition.mandatory) {
-				errors[field] = 'SCHEMA-002'
+				errors[field] = newError('SCHEMA-002')
 			} else if (valueFields.includes(field) && !value[field] && fieldDefinition.mandatory) {
-				errors[field] = 'SCHEMA-003'
+				errors[field] = newError('SCHEMA-003')
 			} else if (fieldDefinition.subSchema) {
 				if (value[field] && JSON.stringify(value[field]) !== '{}') {
 					const validation = validate(value[field], fieldDefinition.subSchema)

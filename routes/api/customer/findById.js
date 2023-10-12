@@ -1,10 +1,11 @@
 export const FindById = (app) => {
-	app.get('/api/customer/:id', (req, res) => {
-		const result = req.database.customer.findOne({
-			query: (x) => x.user_id === req.user._id && x._id === req.params.id,
+	app.get('/api/customer/:id', async (req, res) => {
+		const result = await req.database.customer.findMany({
+			user_id: req.user._id,
+			_id: req.params.id,
 		})
 		res.status(200).json({
-			...result,
+			...result[0],
 			user_id: undefined,
 		})
 	})
