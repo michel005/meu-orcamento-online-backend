@@ -2,7 +2,7 @@ export const ErrorCode = {
 	'AUTH-001': 'Token não encontrado',
 	'AUTH-002': 'Token não é válido',
 	'AUTH-003': 'Token expirado',
-	'AUTH-004': 'Usuário não encontrado',
+	'AUTH-004': 'Usuário/senha inválidos',
 	'AUTH-005': 'Erro desconhecido',
 	'SCHEMA-001': 'Campo inválido',
 	'SCHEMA-002': 'Campo obrigatório não informado',
