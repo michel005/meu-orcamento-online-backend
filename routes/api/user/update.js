@@ -3,7 +3,6 @@ import { UserValidation } from '../../../validations/UserValidation.js'
 
 export const Update = (app) => {
 	app.put('/api/user', async (req, res) => {
-		console.log(req.user)
 		try {
 			await UserValidation({
 				value: {

@@ -4,6 +4,9 @@ export const UserSchema = useSchemaValidation({
 	_id: {
 		mandatory: false,
 	},
+	picture: {
+		mandatory: false,
+	},
 	full_name: {
 		mandatory: true,
 	},
@@ -13,7 +16,39 @@ export const UserSchema = useSchemaValidation({
 	email: {
 		mandatory: true,
 	},
+	birthday: {
+		mandatory: false,
+	},
+	phone: {
+		mandatory: false,
+	},
 	password: {
 		mandatory: true,
+	},
+	address: {
+		mandatory: true,
+		subSchema: {
+			zip_code: {
+				mandatory: true,
+			},
+			street_number: {
+				mandatory: true,
+			},
+			street_name: {
+				mandatory: true,
+			},
+			complement: {
+				mandatory: false,
+			},
+			city: {
+				mandatory: true,
+			},
+			state: {
+				mandatory: true,
+			},
+			country: {
+				mandatory: true,
+			},
+		},
 	},
 })

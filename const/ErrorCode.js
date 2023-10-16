@@ -12,4 +12,5 @@ export const ErrorCode = {
 	'FIELD-003': 'Valor inválido',
 	'DATABASE-001': 'Registro já existênte',
 	'DATABASE-002': 'Registro não encontrado',
+	'USER-001': 'A senha atual esta incorreta',
 }

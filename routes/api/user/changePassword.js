@@ -23,9 +23,8 @@ export const ChangePassword = (app) => {
 			schema.throwValidation(req.body)
 			const errors = {}
 			if (oldPassword !== req.user.password) {
-				errors.old_password = newError('FIELD-003')
+				errors.old_password = newError('USER-001')
 			}
-			console.log('michel')
 			if (newPassword && newPasswordConfirm && newPassword !== newPasswordConfirm) {
 				errors.new_password = newError('FIELD-003')
 			}

@@ -13,6 +13,9 @@ export const CustomerSchema = useSchemaValidation({
 	picture: {
 		mandatory: false,
 	},
+	birthday: {
+		mandatory: false,
+	},
 	name: {
 		mandatory: true,
 	},
@@ -20,7 +23,7 @@ export const CustomerSchema = useSchemaValidation({
 		mandatory: true,
 	},
 	phone: {
-		mandatory: true,
+		mandatory: false,
 	},
 	document_type: {
 		mandatory: true,
