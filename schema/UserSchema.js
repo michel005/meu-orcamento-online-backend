@@ -26,7 +26,7 @@ export const UserSchema = useSchemaValidation({
 		mandatory: true,
 	},
 	address: {
-		mandatory: true,
+		mandatory: false,
 		subSchema: {
 			zip_code: {
 				mandatory: true,
