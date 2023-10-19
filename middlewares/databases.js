@@ -7,7 +7,7 @@ export const Databases = (database) => (req, res, next) => {
 		user: useMongoDatabase(db, 'user'),
 		user_token: useMongoDatabase(db, 'user_token'),
 		customer: useMongoDatabase(db, 'customer'),
-		budget: useMongoDatabase(db, 'budget'),
+		product: useMongoDatabase(db, 'product'),
 	}
 	next()
 }

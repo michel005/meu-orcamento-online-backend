@@ -4,7 +4,7 @@ import { newError } from '../utils/ErrorUtils.js'
  * @param {{
  *     [key: string]: {
  *         mandatory: boolean
- *         validation: (row: any) => boolean
+ *         type?: 'number'
  *         subSchema?: any
  *     }
  * }} schemaValidation
@@ -29,6 +29,12 @@ export const useSchemaValidation = (schemaValidation) => {
 				errors[field] = newError('SCHEMA-002')
 			} else if (valueFields.includes(field) && !value[field] && fieldDefinition.mandatory) {
 				errors[field] = newError('SCHEMA-003')
+			} else if (fieldDefinition?.type === 'number') {
+				try {
+					parseFloat(value[field])
+				} catch (_) {
+					errors[field] = newError('SCHEMA-004')
+				}
 			} else if (fieldDefinition.subSchema) {
 				if (value[field] && JSON.stringify(value[field]) !== '{}') {
 					const validation = validate(value[field], fieldDefinition.subSchema)
