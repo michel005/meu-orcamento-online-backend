@@ -33,14 +33,7 @@ export const ChangePassword = (app) => {
 				return
 			}
 
-			const updatedUser = await req.database.user.update(req.user._id, {
-				...req.user,
-				_id: req.user._id,
-				user_name: req.user.user_name,
-				password: newPasswordConfirm,
-			})
 			res.status(200).json({
-				...updatedUser,
 				_id: undefined,
 				password: undefined,
 			})
