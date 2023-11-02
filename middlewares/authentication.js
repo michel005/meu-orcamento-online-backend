@@ -15,12 +15,30 @@ export const Authentication = async (req, res, next) => {
 	) {
 		next()
 	} else {
-		req.user = {
-			user_name: 'michel005',
-			full_name: 'Michel Douglas Grigoli',
-			picture: null,
-			email: 'mdgrigoli@hotmail.com.br',
+		const authToken = req.headers?.auth_token
+		if (!authToken) {
+			res.status(400).json(newError('AUTH-001'))
+		} else {
+			const findedUserToken = (
+				await req.database.user_token.findMany({
+					token: authToken,
+				})
+			)?.[0]
+			if (!findedUserToken) {
+				res.status(400).send(newError('AUTH-002'))
+			} else {
+				const expirationDate = DateUtils.stringToDate(findedUserToken.expiration)
+				if (new Date().getTime() > expirationDate.getTime()) {
+					res.status(400).send(newError('AUTH-003'))
+					return
+				}
+				req.user = await req.database.user.findOne(findedUserToken.user_id)
+				if (!req.user) {
+					res.status(400).send(newError('AUTH-003'))
+					return
+				}
+				next()
+			}
 		}
-		next()
 	}
 }

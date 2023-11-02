@@ -37,17 +37,20 @@ export const CustomerSchema = useSchemaValidation({
 	active: {
 		mandatory: true,
 	},
+	favorite: {
+		mandatory: false,
+	},
 	address: {
 		mandatory: true,
 		subSchema: {
 			zip_code: {
-				mandatory: true,
+				mandatory: false,
 			},
 			street_number: {
-				mandatory: true,
+				mandatory: false,
 			},
 			street_name: {
-				mandatory: true,
+				mandatory: false,
 			},
 			complement: {
 				mandatory: false,

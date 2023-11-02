@@ -27,7 +27,11 @@ export const useSchemaValidation = (schemaValidation) => {
 			const fieldDefinition = schema[field]
 			if (!valueFields.includes(field) && fieldDefinition.mandatory) {
 				errors[field] = newError('SCHEMA-002')
-			} else if (valueFields.includes(field) && !value[field] && fieldDefinition.mandatory) {
+			} else if (
+				valueFields.includes(field) &&
+				(value[field] === undefined || value[field] === null) &&
+				fieldDefinition.mandatory
+			) {
 				errors[field] = newError('SCHEMA-003')
 			} else if (fieldDefinition?.type === 'number') {
 				try {

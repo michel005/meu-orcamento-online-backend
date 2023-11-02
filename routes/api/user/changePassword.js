@@ -1,5 +1,7 @@
 import { useSchemaValidation } from '../../../hooks/useSchemaValidation.js'
 import { newError } from '../../../utils/ErrorUtils.js'
+import { HandleBusinessResponseAsync } from '../../../business/HandleBusinessResponse.js'
+import { RemoveUserPrivateInformation } from '../../../business/user/RemoveUserPrivateInformation.js'
 
 export const ChangePassword = (app) => {
 	const schema = useSchemaValidation({
@@ -19,7 +21,7 @@ export const ChangePassword = (app) => {
 		const newPassword = req.body?.new_password
 		const newPasswordConfirm = req.body?.new_password_confirm
 
-		try {
+		await HandleBusinessResponseAsync(res, async () => {
 			schema.throwValidation(req.body)
 			const errors = {}
 			if (oldPassword !== req.user.password) {
@@ -29,16 +31,15 @@ export const ChangePassword = (app) => {
 				errors.new_password = newError('FIELD-003')
 			}
 			if (Object.keys(errors).length > 0) {
-				res.status(400).json(errors)
-				return
+				throw errors
 			}
 
-			res.status(200).json({
-				_id: undefined,
-				password: undefined,
+			const updatedUser = await req.database.user.update(req.user._id, {
+				...req.user,
+				password: newPasswordConfirm,
 			})
-		} catch (error) {
-			res.status(400).json(error)
-		}
+
+			return RemoveUserPrivateInformation(updatedUser)
+		})
 	})
 }

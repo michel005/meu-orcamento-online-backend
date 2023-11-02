@@ -1,21 +1,22 @@
-import { ObjectId } from 'mongodb'
 import { v4 as uuid } from 'uuid'
 
 export const useMongoDatabase = (database, entity) => {
 	const collection = database.collection(entity)
 
-	const findAll = () => {
+	const findAll = async () => {
 		try {
-			return collection.find({}).toArray()
+			return await collection.find({}).toArray()
 		} catch (error) {
+			console.error(error)
 			return []
 		}
 	}
 
 	const findMany = async (query) => {
 		try {
-			return collection.find(query).toArray()
+			return await collection.find(query).toArray()
 		} catch (error) {
+			console.error(error)
 			return []
 		}
 	}
@@ -24,18 +25,18 @@ export const useMongoDatabase = (database, entity) => {
 		try {
 			return (await collection.find({ _id: id }).toArray())?.[0]
 		} catch (error) {
+			console.error(error)
 			return null
 		}
 	}
 
 	const create = async (value) => {
-		const response = await collection.insertOne({
+		const generatedId = uuid()
+		await collection.insertOne({
 			...value,
-			_id: uuid(),
+			_id: generatedId,
 		})
-		if (response?.insertedId) {
-			return await findOne(response?.insertedId)
-		}
+		return await findOne(generatedId)
 	}
 
 	const update = async (id, value) => {
@@ -43,8 +44,8 @@ export const useMongoDatabase = (database, entity) => {
 		return await findOne(id)
 	}
 
-	const remove = (id) => {
-		return collection.deleteOne({ _id: id })
+	const remove = async (id) => {
+		return await collection.deleteOne({ _id: id })
 	}
 
 	return {

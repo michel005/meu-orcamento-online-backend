@@ -5,10 +5,12 @@
 	"type": "module",
 	"scripts": {
 		"start": "nodemon app.js",
-		"format": "prettier --write \"**/*.js\""
+		"format": "prettier --write \"**/*.js\"",
+		"aws:publish": "node ./scripts/publish_aws.js"
 	},
 	"license": "MIT",
 	"dependencies": {
+		"aws-sdk": "^2.1483.0",
 		"axios": "^1.5.1",
 		"body-parser": "^1.20.2",
 		"cors": "^2.8.5",
