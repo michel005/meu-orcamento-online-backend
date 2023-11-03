@@ -1,7 +1,7 @@
 export const RemoveUserPrivateInformation = (user) => {
 	return {
 		...user,
-		_id: undefined,
+		id: undefined,
 		password: undefined,
 	}
 }

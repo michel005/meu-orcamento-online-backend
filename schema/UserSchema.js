@@ -1,9 +1,6 @@
 import { useSchemaValidation } from '../hooks/useSchemaValidation.js'
 
 export const UserSchema = useSchemaValidation({
-	_id: {
-		mandatory: false,
-	},
 	picture: {
 		mandatory: false,
 	},

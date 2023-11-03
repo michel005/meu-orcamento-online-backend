@@ -8,12 +8,14 @@ export const ValidateAndCreateCustomer = async (database, customer, currentUser)
 		address: customer.address || {},
 		created: DateUtils.dateTimeToString(new Date()),
 		updated: undefined,
-		user_id: currentUser._id,
+		user_id: currentUser.id,
 	}
 	await CustomerValidation({
 		value,
 		database: database,
 	})
+
+	console.log(value)
 
 	return RemoveCustomerPrivateInformation(await database.create(value))
 }

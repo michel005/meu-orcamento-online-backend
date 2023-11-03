@@ -1,7 +1,7 @@
 import { useSchemaValidation } from '../hooks/useSchemaValidation.js'
 
 export const CustomerSchema = useSchemaValidation({
-	_id: {
+	id: {
 		mandatory: false,
 	},
 	created: {

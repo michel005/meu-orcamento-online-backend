@@ -1,11 +1,11 @@
 import { v4 as uuid } from 'uuid'
 
-export const useMongoDatabase = (database, entity) => {
-	const collection = database.collection(entity)
+export const useMongoDatabase = (prisma, entity) => {
+	const database = prisma[entity]
 
 	const findAll = async () => {
 		try {
-			return await collection.find({}).toArray()
+			return await database.findMany()
 		} catch (error) {
 			console.error(error)
 			return []
@@ -14,7 +14,7 @@ export const useMongoDatabase = (database, entity) => {
 
 	const findMany = async (query) => {
 		try {
-			return await collection.find(query).toArray()
+			return await database.findMany({ where: query })
 		} catch (error) {
 			console.error(error)
 			return []
@@ -23,7 +23,7 @@ export const useMongoDatabase = (database, entity) => {
 
 	const findOne = async (id) => {
 		try {
-			return (await collection.find({ _id: id }).toArray())?.[0]
+			return (await database.findMany({ where: { id: id } }))?.[0]
 		} catch (error) {
 			console.error(error)
 			return null
@@ -31,21 +31,20 @@ export const useMongoDatabase = (database, entity) => {
 	}
 
 	const create = async (value) => {
-		const generatedId = uuid()
-		await collection.insertOne({
-			...value,
-			_id: generatedId,
+		return await database.create({
+			data: value,
 		})
-		return await findOne(generatedId)
 	}
 
 	const update = async (id, value) => {
-		await collection.updateOne({ _id: id }, { $set: value })
-		return await findOne(id)
+		return await database.update({
+			where: { id: id },
+			data: value,
+		})
 	}
 
 	const remove = async (id) => {
-		return await collection.deleteOne({ _id: id })
+		return await database.delete({ where: { id: id } })
 	}
 
 	return {

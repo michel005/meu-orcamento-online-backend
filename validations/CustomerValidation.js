@@ -39,7 +39,7 @@ export const CustomerValidation = async ({ value, database }) => {
 
 	if (validPersonType && validDocumentType && validDocumentNumber) {
 		const customerFinded = await database.findMany({
-			_id: { $ne: value._id },
+			id: { $ne: value.id },
 			user_id: value.user_id,
 			person_type: value.person_type,
 			document_type: value.document_type,
@@ -52,7 +52,7 @@ export const CustomerValidation = async ({ value, database }) => {
 
 	if (value?.email) {
 		const customerFinded = await database.findMany({
-			_id: { $ne: value._id },
+			id: { $ne: value.id },
 			user_id: value.user_id,
 			email: value.email,
 		})

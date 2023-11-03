@@ -63,10 +63,11 @@ export const useSchemaValidation = (schemaValidation) => {
 
 	const parse = (value) => {
 		const validValues = {}
-		for (const field of Object.keys(value)) {
-			const schemaFields = Object.keys(schema)
-			if (schemaFields.includes(field)) {
-				validValues[field] = value[field]
+		for (const field of Object.keys(schemaValidation)) {
+			if (Object.keys(value).includes(field)) {
+				validValues[field] = value?.[field]
+			} else {
+				validValues[field] = undefined
 			}
 		}
 		return validValues
