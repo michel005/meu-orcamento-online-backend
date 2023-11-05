@@ -2,8 +2,6 @@ import { CustomerSchema } from '../schema/CustomerSchema.js'
 import { newError } from '../utils/ErrorUtils.js'
 
 export const CustomerValidation = async ({ value, database }) => {
-	CustomerSchema.throwValidation(value)
-
 	let validPersonType = false
 
 	const errors = {}
@@ -14,7 +12,7 @@ export const CustomerValidation = async ({ value, database }) => {
 	}
 
 	let validDocumentType = false
-	if (value?.document_type && value.person_type) {
+	if (validPersonType && value?.document_type) {
 		if (value.person_type === 'PF' && !['RG', 'CPF'].includes(value.document_type)) {
 			errors.document_type = newError('FIELD-002')
 		} else if (value.person_type === '`PJ`' && value.document_type !== 'CNPJ') {
@@ -39,7 +37,9 @@ export const CustomerValidation = async ({ value, database }) => {
 
 	if (validPersonType && validDocumentType && validDocumentNumber) {
 		const customerFinded = await database.findMany({
-			id: { $ne: value.id },
+			NOT: {
+				id: value.id,
+			},
 			user_id: value.user_id,
 			person_type: value.person_type,
 			document_type: value.document_type,
@@ -52,7 +52,9 @@ export const CustomerValidation = async ({ value, database }) => {
 
 	if (value?.email) {
 		const customerFinded = await database.findMany({
-			id: { $ne: value.id },
+			NOT: {
+				id: value.id,
+			},
 			user_id: value.user_id,
 			email: value.email,
 		})
@@ -60,7 +62,8 @@ export const CustomerValidation = async ({ value, database }) => {
 			errors.email = newError('DATABASE-001')
 		}
 	}
-	if (Object.keys(errors).length > 0) {
-		throw errors
+	return {
+		hasError: Object.keys(errors).length > 0,
+		errors,
 	}
 }

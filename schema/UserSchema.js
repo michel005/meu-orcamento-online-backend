@@ -1,6 +1,9 @@
 import { useSchemaValidation } from '../hooks/useSchemaValidation.js'
 
 export const UserSchema = useSchemaValidation({
+	id: {
+		mandatory: false,
+	},
 	picture: {
 		mandatory: false,
 	},
@@ -21,31 +24,5 @@ export const UserSchema = useSchemaValidation({
 	},
 	password: {
 		mandatory: true,
-	},
-	address: {
-		mandatory: false,
-		subSchema: {
-			zip_code: {
-				mandatory: true,
-			},
-			street_number: {
-				mandatory: true,
-			},
-			street_name: {
-				mandatory: true,
-			},
-			complement: {
-				mandatory: false,
-			},
-			city: {
-				mandatory: true,
-			},
-			state: {
-				mandatory: true,
-			},
-			country: {
-				mandatory: true,
-			},
-		},
 	},
 })

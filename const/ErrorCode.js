@@ -14,5 +14,7 @@ export const ErrorCode = {
 	'DATABASE-001': 'Registro já existênte',
 	'DATABASE-002': 'Registro não encontrado',
 	'USER-001': 'A senha atual esta incorreta',
+	'USER-002': 'Já existe um usuário com este e-mail',
+	'USER-003': 'Já existe um usuário com este nome de usuário',
 	'PRODUCT-001': 'Código usado por outro produto',
 }

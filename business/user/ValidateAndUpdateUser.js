@@ -1,20 +1,50 @@
-import { UserValidation } from '../../validations/UserValidation.js'
-import { useMongoDatabase } from '../../hooks/useMongoDatabase.js'
 import { RemoveUserPrivateInformation } from './RemoveUserPrivateInformation.js'
+import { UserSchema } from '../../schema/UserSchema.js'
+import { AddressSchema } from '../../schema/AddressSchema.js'
+import { SendFileByTypeAndIdentifier } from '../files/SendFileByTypeAndIdentifier.js'
+import { RemoveFileByTypeAndIdentifier } from '../files/RemoveFileByTypeAndIdentifier.js'
 
-export const ValidateAndUpdateUser = async (database, currentUser, changedUser) => {
-	await UserValidation({
-		value: {
-			...currentUser,
-			...changedUser,
-		},
-		database: database,
-	})
-	const updatedUser = await database.update(currentUser._id, {
-		...currentUser,
-		...changedUser,
+export const ValidateAndUpdateUser = async (databases, currentUser, changed, token) => {
+	const user = {
+		...changed.user,
+		picture: undefined,
+		password: currentUser.password,
 		email: currentUser.email,
 		user_name: currentUser.user_name,
-	})
-	return RemoveUserPrivateInformation(updatedUser)
+		address_id: undefined,
+		id: currentUser.id,
+	}
+	const address = changed.address
+
+	let errors = {}
+
+	const userValidation = UserSchema.validate(user)
+	if (userValidation.hasError) {
+		errors.user = userValidation.errors
+	}
+	const addressValidation = AddressSchema.validate(address)
+	if (addressValidation.hasError) {
+		errors.address = addressValidation.errors
+	}
+
+	if (Object.keys(errors).length > 0) {
+		throw errors
+	}
+
+	const newAddress = await databases.address.update(address.id, address)
+	const newUser = await databases.user.update(user.id, { ...user, address_id: newAddress.id })
+
+	if (changed.user.picture) {
+		SendFileByTypeAndIdentifier('user', newUser.id, changed.user.picture)
+	} else {
+		RemoveFileByTypeAndIdentifier('user', newUser.id)
+	}
+
+	return {
+		user: RemoveUserPrivateInformation({
+			...newUser,
+			picture: changed.user.picture,
+		}),
+		address: newAddress,
+	}
 }

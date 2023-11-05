@@ -1,11 +1,18 @@
 import { v4 as uuid } from 'uuid'
 
-export const useMongoDatabase = (prisma, entity) => {
+export const useMySQLDatabase = (prisma, entity, includes = []) => {
 	const database = prisma[entity]
+
+	const includesSection = includes.reduce((obj, x) => {
+		obj[x] = true
+		return obj
+	}, {})
 
 	const findAll = async () => {
 		try {
-			return await database.findMany()
+			return await database.findMany({
+				include: includesSection,
+			})
 		} catch (error) {
 			console.error(error)
 			return []
@@ -14,7 +21,10 @@ export const useMongoDatabase = (prisma, entity) => {
 
 	const findMany = async (query) => {
 		try {
-			return await database.findMany({ where: query })
+			return await database.findMany({
+				include: includesSection,
+				where: query,
+			})
 		} catch (error) {
 			console.error(error)
 			return []
@@ -23,7 +33,12 @@ export const useMongoDatabase = (prisma, entity) => {
 
 	const findOne = async (id) => {
 		try {
-			return (await database.findMany({ where: { id: id } }))?.[0]
+			return (
+				await database.findMany({
+					include: includesSection,
+					where: { id: id },
+				})
+			)?.[0]
 		} catch (error) {
 			console.error(error)
 			return null
@@ -32,7 +47,10 @@ export const useMongoDatabase = (prisma, entity) => {
 
 	const create = async (value) => {
 		return await database.create({
-			data: value,
+			data: {
+				id: uuid(),
+				...value,
+			},
 		})
 	}
 

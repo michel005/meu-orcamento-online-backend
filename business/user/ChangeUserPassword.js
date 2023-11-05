@@ -25,7 +25,7 @@ export const ChangeUserPassword = async (
 		throw errors
 	}
 
-	const updatedUser = await database.update(currentUser._id, {
+	const updatedUser = await database.update(currentUser.id, {
 		...currentUser,
 		password: newPasswordConfirm,
 	})

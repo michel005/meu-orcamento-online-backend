@@ -5,25 +5,22 @@
 	"type": "module",
 	"scripts": {
 		"start": "nodemon app.js",
-		"format": "prettier --write \"**/*.js\"",
-		"aws:publish": "node ./scripts/publish_aws.js"
+		"format": "prettier --write \"**/*.js\""
 	},
 	"license": "MIT",
 	"dependencies": {
 		"@prisma/client": "^5.5.2",
-		"aws-sdk": "^2.1483.0",
 		"axios": "^1.5.1",
-		"body-parser": "^1.20.2",
 		"cors": "^2.8.5",
 		"express": "^4.18.2",
-		"mongodb": "^6.2.0",
+		"mime-types": "^2.1.35",
+		"multer": "^1.4.5-lts.1",
 		"mysql": "^2.18.1",
 		"prettier": "^3.0.3",
-		"prisma": "^5.5.2",
-		"qrcode": "^1.5.3",
 		"uuid": "^9.0.1"
 	},
 	"devDependencies": {
-		"nodemon": "^3.0.1"
+		"nodemon": "^3.0.1",
+		"prisma": "^5.5.2"
 	}
 }

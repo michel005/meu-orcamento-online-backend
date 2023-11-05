@@ -10,7 +10,8 @@ import { newError } from '../utils/ErrorUtils.js'
  * }} schemaValidation
  */
 export const useSchemaValidation = (schemaValidation) => {
-	const validate = (value, schema = schemaValidation) => {
+	const validate = (valueX, schema = schemaValidation) => {
+		const value = JSON.parse(JSON.stringify(valueX))
 		const schemaFields = Object.keys(schema)
 		const valueFields = Object.keys(value)
 

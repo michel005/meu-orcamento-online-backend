@@ -1,14 +1,12 @@
-import { useMongoDatabase } from '../hooks/useMongoDatabase.js'
-import { PrismaClient } from '@prisma/client'
+import { useMySQLDatabase } from '../hooks/useMySQLDatabase.js'
 
-export const Databases = (database) => (req, res, next) => {
-	const prisma = new PrismaClient()
-
+export const Databases = (prisma) => (req, res, next) => {
 	req.database = {
-		user: useMongoDatabase(prisma, 'user'),
-		user_token: useMongoDatabase(prisma, 'userToken'),
-		customer: useMongoDatabase(prisma, 'customer'),
-		product: useMongoDatabase(prisma, 'product'),
+		user: useMySQLDatabase(prisma, 'user', ['address']),
+		user_token: useMySQLDatabase(prisma, 'user_token', ['user']),
+		customer: useMySQLDatabase(prisma, 'customer', ['address', 'user']),
+		address: useMySQLDatabase(prisma, 'address'),
+		// product: useMySQLDatabase(prisma, 'product'),
 	}
 	next()
 }

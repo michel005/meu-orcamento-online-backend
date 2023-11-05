@@ -5,36 +5,48 @@ import { RemoveUserPrivateInformation } from '../../business/user/RemoveUserPriv
 import { ValidateAndCreateUser } from '../../business/user/ValidateAndCreateUser.js'
 import { ValidateAndUpdateUser } from '../../business/user/ValidateAndUpdateUser.js'
 import { ChangeUserPassword } from '../../business/user/ChangeUserPassword.js'
+import { GetFileByTypeAndIdentifier } from '../../business/files/GetFileByTypeAndIdentifier.js'
 
-const UserRoute = express
+export const UserRoute = express
 	.Router()
 	.post('/api/user/login', async (req, res) => {
 		return await HandleBusinessResponseAsync(res, async () => {
 			return LoginUserWithUserNameAndPassword(
-				req.database.user,
-				req.database.user_token,
+				req.database,
 				req.body?.user_name,
-				req.body?.password,
-				req.ip
+				req.body?.password
 			)
 		})
 	})
 	.post('/api/user/me', async (req, res) => {
-		return await HandleBusinessResponseAsync(req, () => {
+		return await HandleBusinessResponseAsync(res, async () => {
 			if (!req.user) {
 				throw null
 			}
-			return RemoveUserPrivateInformation(req.user)
+			return {
+				user: RemoveUserPrivateInformation({
+					...req.user,
+					picture: GetFileByTypeAndIdentifier('user', req.user.id),
+					address: undefined,
+					address_id: undefined,
+				}),
+				address: req.user.address || {},
+			}
 		})
 	})
 	.post('/api/user', async (req, res) => {
 		return await HandleBusinessResponseAsync(res, async () => {
-			return await ValidateAndCreateUser(req.database.user, req.body)
+			return await ValidateAndCreateUser(req.database, req.body)
 		})
 	})
 	.put('/api/user', async (req, res) => {
 		return await HandleBusinessResponseAsync(res, async () => {
-			return await ValidateAndUpdateUser(req.database.user, req.user, req.body)
+			return await ValidateAndUpdateUser(
+				req.database,
+				req.user,
+				req.body,
+				req.headers.auth_token
+			)
 		})
 	})
 	.post('/api/user/changePassword', async (req, res) => {
@@ -48,5 +60,3 @@ const UserRoute = express
 			)
 		})
 	})
-
-export { UserRoute }

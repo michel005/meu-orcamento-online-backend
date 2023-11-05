@@ -1,0 +1,72 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model address {
+    id            String     @id @db.Char(36)
+    zip_code      String?    @db.VarChar(20)
+    street_name   String?    @db.VarChar(255)
+    street_number String?    @db.VarChar(255)
+    complement    String?    @db.VarChar(255)
+    city          String?    @db.VarChar(255)
+    state         String?    @db.VarChar(255)
+    country       String?    @db.VarChar(255)
+    customer      customer[]
+    user          user[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model customer {
+    id              String   @id @db.Char(36)
+    user_id         String   @db.Char(36)
+    address_id      String   @db.Char(36)
+    created         String   @db.VarChar(20)
+    updated         String?  @db.VarChar(20)
+    picture         String?  @db.VarChar(255)
+    birthday        String?  @db.VarChar(10)
+    full_name       String?  @db.VarChar(255)
+    phone           String?  @db.VarChar(30)
+    person_type     String?  @db.VarChar(2)
+    document_type   String?  @db.VarChar(10)
+    document_number String?  @db.VarChar(255)
+    email           String?  @db.VarChar(255)
+    active          Boolean? @db.TinyInt
+    favorite        Boolean? @db.TinyInt
+    user            user     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "customer_ibfk_1")
+    address         address  @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "customer_ibfk_2")
+
+    @@index([address_id], map: "address_id")
+    @@index([user_id], map: "user_id")
+}
+
+model user {
+    id         String       @id @db.Char(36)
+    user_name  String       @db.VarChar(255)
+    full_name  String       @db.VarChar(255)
+    email      String       @db.VarChar(255)
+    password   String       @db.VarChar(255)
+    phone      String?      @db.VarChar(255)
+    birthday   String?      @db.VarChar(255)
+    address_id String?      @db.Char(36)
+    customer   customer[]
+    address    address?     @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_ibfk_1")
+    user_token user_token[]
+
+    @@index([address_id], map: "address_id")
+}
+
+model user_token {
+    id         String @id @db.Char(36)
+    user_id    String @db.Char(36)
+    date_time  String @db.VarChar(20)
+    expiration String @db.VarChar(20)
+    token      String @db.Char(36)
+    user       user   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_token_ibfk_1")
+
+    @@index([user_id], map: "user_id")
+}

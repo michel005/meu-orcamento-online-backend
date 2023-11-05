@@ -5,7 +5,7 @@ export const CustomerSchema = useSchemaValidation({
 		mandatory: false,
 	},
 	created: {
-		mandatory: true,
+		mandatory: false,
 	},
 	updated: {
 		mandatory: false,
@@ -16,7 +16,7 @@ export const CustomerSchema = useSchemaValidation({
 	birthday: {
 		mandatory: false,
 	},
-	name: {
+	full_name: {
 		mandatory: true,
 	},
 	person_type: {
@@ -40,33 +40,10 @@ export const CustomerSchema = useSchemaValidation({
 	favorite: {
 		mandatory: false,
 	},
-	address: {
-		mandatory: true,
-		subSchema: {
-			zip_code: {
-				mandatory: false,
-			},
-			street_number: {
-				mandatory: false,
-			},
-			street_name: {
-				mandatory: false,
-			},
-			complement: {
-				mandatory: false,
-			},
-			city: {
-				mandatory: true,
-			},
-			state: {
-				mandatory: true,
-			},
-			country: {
-				mandatory: true,
-			},
-		},
-	},
 	user_id: {
-		mandatory: true,
+		mandatory: false,
+	},
+	address_id: {
+		mandatory: false,
 	},
 })
