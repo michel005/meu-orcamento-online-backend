@@ -1,27 +1,36 @@
 import fs from 'fs'
+import { GetUrlByTypeAndIdentifier } from './GetUrlByTypeAndIdentifier.js'
+import { GeneralConfiguration } from '../../config/GeneralConfiguration.js'
 
 export const SendFileByTypeAndIdentifier = (type, identifier, content, userId) => {
-	if (type === 'user') {
-		try {
-			fs.readdirSync(`./uploads/${identifier}`)
-		} catch (err) {
-			fs.mkdirSync(`./uploads/${identifier}`)
-		}
-		if (fs.existsSync(`./uploads/${identifier}/profile`)) {
-			fs.rmSync(`./uploads/${identifier}/profile`)
-		}
-		fs.writeFileSync(`./uploads/${identifier}/profile`, content)
-		return `./uploads/${identifier}/profile`
-	} else {
-		try {
-			fs.readdirSync(`./uploads/${userId}/${type}`)
-		} catch (err) {
-			fs.mkdirSync(`./uploads/${userId}/${type}`)
-		}
-		if (fs.existsSync(`./uploads/${userId}/${type}/${identifier}`)) {
-			fs.rmSync(`./uploads/${userId}/${type}/${identifier}`)
-		}
-		fs.writeFileSync(`./uploads/${userId}/${type}/${identifier}`, content)
-		return `./uploads/${userId}/${type}/${identifier}`
+	if (!fs.existsSync(GeneralConfiguration.uploadDir)) {
+		fs.mkdirSync(GeneralConfiguration.uploadDir)
 	}
+	if (type === 'user') {
+		if (!fs.existsSync(`${GeneralConfiguration.uploadDir}/${identifier}`)) {
+			fs.mkdirSync(`${GeneralConfiguration.uploadDir}/${identifier}`)
+		}
+		if (fs.existsSync(`${GeneralConfiguration.uploadDir}/${identifier}/profile`)) {
+			fs.rmSync(`${GeneralConfiguration.uploadDir}/${identifier}/profile`)
+		}
+		fs.writeFileSync(
+			`${GeneralConfiguration.uploadDir}/${identifier}/profile.png`,
+			Buffer.from(content.replace('data:', '').replace(/^.+,/, ''), 'base64')
+		)
+	} else {
+		if (!fs.existsSync(`${GeneralConfiguration.uploadDir}/${userId}`)) {
+			fs.mkdirSync(`${GeneralConfiguration.uploadDir}/${userId}`)
+		}
+		if (!fs.existsSync(`${GeneralConfiguration.uploadDir}/${userId}/${type}`)) {
+			fs.mkdirSync(`${GeneralConfiguration.uploadDir}/${userId}/${type}`)
+		}
+		if (fs.existsSync(`${GeneralConfiguration.uploadDir}/${userId}/${type}/${identifier}`)) {
+			fs.rmSync(`${GeneralConfiguration.uploadDir}/${userId}/${type}/${identifier}`)
+		}
+		fs.writeFileSync(
+			`${GeneralConfiguration.uploadDir}/${userId}/${type}/${identifier}.png`,
+			Buffer.from(content.replace('data:', '').replace(/^.+,/, ''), 'base64')
+		)
+	}
+	return GetUrlByTypeAndIdentifier(type, identifier, userId)
 }

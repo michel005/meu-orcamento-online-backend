@@ -18,7 +18,7 @@ export const ChangeUserPassword = async (
 	if (oldPassword !== currentUser.password) {
 		errors.old_password = newError('USER-001')
 	}
-	if (newPassword && newPasswordConfirm && newPassword !== newPasswordConfirm) {
+	if (newPassword !== newPasswordConfirm) {
 		errors.new_password = newError('FIELD-003')
 	}
 	if (Object.keys(errors).length > 0) {
@@ -27,6 +27,7 @@ export const ChangeUserPassword = async (
 
 	const updatedUser = await database.update(currentUser.id, {
 		...currentUser,
+		address: undefined,
 		password: newPasswordConfirm,
 	})
 	return RemoveUserPrivateInformation(updatedUser)

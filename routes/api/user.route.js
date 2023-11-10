@@ -6,10 +6,11 @@ import { ValidateAndCreateUser } from '../../business/user/ValidateAndCreateUser
 import { ValidateAndUpdateUser } from '../../business/user/ValidateAndUpdateUser.js'
 import { ChangeUserPassword } from '../../business/user/ChangeUserPassword.js'
 import { GetFileByTypeAndIdentifier } from '../../business/files/GetFileByTypeAndIdentifier.js'
+import { GetUrlByTypeAndIdentifier } from '../../business/files/GetUrlByTypeAndIdentifier.js'
 
 export const UserRoute = express
 	.Router()
-	.post('/api/user/login', async (req, res) => {
+	.post('/user/login', async (req, res) => {
 		return await HandleBusinessResponseAsync(res, async () => {
 			return LoginUserWithUserNameAndPassword(
 				req.database,
@@ -18,7 +19,7 @@ export const UserRoute = express
 			)
 		})
 	})
-	.post('/api/user/me', async (req, res) => {
+	.post('/user/me', async (req, res) => {
 		return await HandleBusinessResponseAsync(res, async () => {
 			if (!req.user) {
 				throw null
@@ -26,7 +27,7 @@ export const UserRoute = express
 			return {
 				user: RemoveUserPrivateInformation({
 					...req.user,
-					picture: GetFileByTypeAndIdentifier('user', req.user.id),
+					picture: GetUrlByTypeAndIdentifier('user', req.user.id, req.user.id),
 					address: undefined,
 					address_id: undefined,
 				}),
@@ -34,12 +35,12 @@ export const UserRoute = express
 			}
 		})
 	})
-	.post('/api/user', async (req, res) => {
+	.post('/user', async (req, res) => {
 		return await HandleBusinessResponseAsync(res, async () => {
 			return await ValidateAndCreateUser(req.database, req.body)
 		})
 	})
-	.put('/api/user', async (req, res) => {
+	.put('/user', async (req, res) => {
 		return await HandleBusinessResponseAsync(res, async () => {
 			return await ValidateAndUpdateUser(
 				req.database,
@@ -49,8 +50,9 @@ export const UserRoute = express
 			)
 		})
 	})
-	.post('/api/user/changePassword', async (req, res) => {
+	.post('/user/changePassword', async (req, res) => {
 		return await HandleBusinessResponseAsync(res, async () => {
+			console.log(req.user)
 			return await ChangeUserPassword(
 				req.database.user,
 				req.user,

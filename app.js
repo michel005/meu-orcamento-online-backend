@@ -6,6 +6,7 @@ import { Databases } from './middlewares/databases.js'
 import { UserRoute } from './routes/api/user.route.js'
 import { PrismaClient } from '@prisma/client'
 import { CustomerRoute } from './routes/api/customer.route.js'
+import { FileRoute } from './routes/api/file.route.js'
 
 const prisma = new PrismaClient()
 const app = express()
@@ -15,8 +16,7 @@ app.use(cors())
 app.use(Databases(prisma))
 app.use(Authentication)
 app.use(express.static('/uploads'))
-app.use(UserRoute)
-app.use(CustomerRoute)
+app.use('/api', express.Router().use(UserRoute).use(CustomerRoute).use(FileRoute))
 
 app.listen(GeneralConfiguration.port, () => {
 	console.log(`\r\nUp in port ${GeneralConfiguration.port}`)

@@ -32,17 +32,19 @@ export const ValidateAndUpdateCustomer = async (databases, value, currentUser) =
 	const customerUpdated = await databases.customer.update(customer.id, customer)
 	const addressUpdated = await databases.address.update(address.id, address)
 
-	if (value.customer.picture) {
-		SendFileByTypeAndIdentifier(
-			'customer',
-			customerUpdated.id,
-			value.customer.picture,
-			currentUser.id
-		)
-		customerUpdated.picture = value.customer.picture
-	} else {
-		RemoveFileByTypeAndIdentifier('customer', customer.id, currentUser.id)
-		customerUpdated.picture = null
+	if (!value.customer.picture || !value.customer.picture.startsWith('http')) {
+		if (value.customer.picture) {
+			SendFileByTypeAndIdentifier(
+				'customer',
+				customerUpdated.id,
+				value.customer.picture,
+				currentUser.id
+			)
+			customerUpdated.picture = value.customer.picture
+		} else {
+			RemoveFileByTypeAndIdentifier('customer', customer.id, currentUser.id)
+			customerUpdated.picture = null
+		}
 	}
 
 	return {

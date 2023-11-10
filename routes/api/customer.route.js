@@ -4,21 +4,21 @@ import { ValidateAndCreateCustomer } from '../../business/customer/ValidateAndCr
 import { ValidateAndUpdateCustomer } from '../../business/customer/ValidateAndUpdateCustomer.js'
 import { RemoveCustomerPrivateInformation } from '../../business/customer/RemoveCustomerPrivateInformation.js'
 import { newError } from '../../utils/ErrorUtils.js'
-import { GetFileByTypeAndIdentifier } from '../../business/files/GetFileByTypeAndIdentifier.js'
+import { GetUrlByTypeAndIdentifier } from '../../business/files/GetUrlByTypeAndIdentifier.js'
 
 export const CustomerRoute = express
 	.Router()
-	.post('/api/customer', async (req, res) => {
+	.post('/customer', async (req, res) => {
 		await HandleBusinessResponseAsync(res, async () => {
 			return await ValidateAndCreateCustomer(req.database, req.body, req.user)
 		})
 	})
-	.put('/api/customer', async (req, res) => {
+	.put('/customer', async (req, res) => {
 		await HandleBusinessResponseAsync(res, async () => {
 			return await ValidateAndUpdateCustomer(req.database, req.body, req.user)
 		})
 	})
-	.delete('/api/customer/:id', async (req, res) => {
+	.delete('/customer/:id', async (req, res) => {
 		await HandleBusinessResponseAsync(res, async () => {
 			const findedCustomer = await req.database.customer.findOne(req.params.id)
 			if (!findedCustomer) {
@@ -28,12 +28,12 @@ export const CustomerRoute = express
 			return
 		})
 	})
-	.get('/api/customer', async (req, res) => {
+	.get('/customer', async (req, res) => {
 		const allCustomers = await req.database.customer.findMany({ user_id: req.user.id })
 		res.status(200).json(
 			allCustomers
 				.map((x) => {
-					x.picture = GetFileByTypeAndIdentifier('customer', x.id, req.user.id)
+					x.picture = GetUrlByTypeAndIdentifier('customer', x.id, req.user.id)
 					x.user = undefined
 					return { ...x }
 				})

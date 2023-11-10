@@ -12,9 +12,9 @@ const SendError = (res) => {
 	}
 }
 
-export const HandleBusinessResponse = (res, callback) => {
+export const HandleBusinessResponse = async (res, callback) => {
 	try {
-		callback(SendSuccess(res), SendError(res))
+		await callback()
 	} catch (err) {
 		console.log(err)
 		res.status(404).json(err)
@@ -24,6 +24,15 @@ export const HandleBusinessResponse = (res, callback) => {
 export const HandleBusinessResponseAsync = async (res, callback) => {
 	try {
 		res.status(200).json(await callback())
+	} catch (err) {
+		console.log(err)
+		res.status(404).json(err)
+	}
+}
+
+export const HandleBusinessFileResponseAsync = async (res, callback) => {
+	try {
+		res.status(200).sendFile(await callback())
 	} catch (err) {
 		console.log(err)
 		res.status(404).json(err)

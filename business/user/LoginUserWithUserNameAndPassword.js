@@ -2,6 +2,7 @@ import { CreateNewAccessToken } from './CreateNewAccessToken.js'
 import { RemoveUserPrivateInformation } from './RemoveUserPrivateInformation.js'
 import { newError } from '../../utils/ErrorUtils.js'
 import { GetFileByTypeAndIdentifier } from '../files/GetFileByTypeAndIdentifier.js'
+import { GetUrlByTypeAndIdentifier } from '../files/GetUrlByTypeAndIdentifier.js'
 
 export const LoginUserWithUserNameAndPassword = async (databases, username, password) => {
 	const findedUser = await databases.user.findMany({
@@ -17,7 +18,7 @@ export const LoginUserWithUserNameAndPassword = async (databases, username, pass
 			user: RemoveUserPrivateInformation({
 				...logedUser,
 				address: undefined,
-				picture: GetFileByTypeAndIdentifier('user', findedUser[0].id),
+				picture: GetUrlByTypeAndIdentifier('user', findedUser[0].id),
 			}),
 			address: logedUser.address,
 			token: newToken,
