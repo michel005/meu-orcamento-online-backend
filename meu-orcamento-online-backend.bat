@@ -1,4 +1,4 @@
-call yarn prisma db pull --force
+call yarn prisma generate
 
 cls
 

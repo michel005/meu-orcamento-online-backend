@@ -1,18 +1,15 @@
 {
 	"compilerOptions": {
-		"jsx": "react",
-		"target": "es6",
-		"lib": ["dom", "dom.iterable", "esnext"],
+		"target": "es5",
+		"module": "commonjs",
+		"lib": ["es6"],
 		"allowJs": true,
-		"skipLibCheck": true,
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
+		"outDir": "build",
+		"rootDir": "src",
 		"strict": true,
-		"forceConsistentCasingInFileNames": true,
-		"moduleResolution": "node",
+		"noImplicitAny": true,
+		"esModuleInterop": true,
 		"resolveJsonModule": true,
-		"isolatedModules": true,
-		"noEmit": false
-	},
-	"include": ["src"]
+		"types": ["node", "express"]
+	}
 }

@@ -20,7 +20,6 @@ model address {
   user          user[]
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model customer {
   id                   String                 @id @db.Char(36)
   user_id              String                 @db.Char(36)
@@ -35,8 +34,8 @@ model customer {
   document_type        String?                @db.VarChar(10)
   document_number      String?                @db.VarChar(255)
   email                String?                @db.VarChar(255)
-  active               Int?                   @db.TinyInt
-  favorite             Int?                   @db.TinyInt
+  active               Boolean?               @db.TinyInt
+  favorite             Boolean?               @db.TinyInt
   address              address                @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_customer_address")
   user                 user                   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_customer_user")
   product              product[]
@@ -46,7 +45,6 @@ model customer {
   @@index([user_id], map: "fk_customer_user")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model product {
   id                   String                 @id @db.Char(36)
   user_id              String                 @db.Char(36)
@@ -55,7 +53,7 @@ model product {
   created              String                 @db.VarChar(20)
   updated              String?                @db.VarChar(20)
   title                String                 @db.VarChar(255)
-  description          Bytes?                 @db.Blob
+  description          String?                @db.LongText
   categories           String?                @db.VarChar(255)
   price                BigInt?
   status               String                 @default("AVAILABLE") @db.VarChar(255)

@@ -1,4 +1,5 @@
 --
+SET autocommit=0;
 DROP DATABASE IF EXISTS meu_bazar_online;
 CREATE DATABASE meu_bazar_online;
 USE meu_bazar_online;
@@ -69,7 +70,7 @@ CREATE TABLE meu_bazar_online.product (
     created          VARCHAR(20) NOT NULL,
     updated          VARCHAR(20),
     title            VARCHAR(255) NOT NULL,
-    description      BLOB,
+    description      LONGTEXT,
 	categories       VARCHAR(255),
 	price            BIGINT,
     status           VARCHAR(255) NOT NULL DEFAULT 'AVAILABLE',
