@@ -90,20 +90,3 @@ CREATE TABLE meu_bazar_online.product_waiting_list (
     CONSTRAINT fk_product_waiting_list_product FOREIGN KEY (product_id) REFERENCES meu_bazar_online.product(id),
     CONSTRAINT fk_product_waiting_list_customer FOREIGN KEY (customer_id) REFERENCES meu_bazar_online.customer(id)
 );
---
-INSERT INTO meu_bazar_online.user (
-  id,
-  full_name,
-  user_name,
-  email,
-  phone,
-  password
-) VALUES (
-  "ded70669-8118-4ad1-ae6f-67f09ccd808b",
-  "Michel Douglas Grigoli",
-  "michel005",
-  "mdgrigoli@hotmail.com.br",
-  "(44) 99129-9291",
-  "thmpv005"
-)
---
