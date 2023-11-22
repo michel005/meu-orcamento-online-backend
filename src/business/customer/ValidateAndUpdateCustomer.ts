@@ -17,8 +17,8 @@ export const ValidateAndUpdateCustomer = async (
 	},
 	currentUser: UserType
 ) => {
-	const foundedCustomer = await Database.customer.findOne(value.customer.id as string)
-	if (!foundedCustomer) {
+	const customerFound = await Database.customer.findOne(value.customer.id as string)
+	if (!customerFound) {
 		throw newError('DATABASE-002')
 	}
 

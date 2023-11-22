@@ -15,8 +15,8 @@ export const SendFileByTypeAndIdentifier = (
 		if (!fs.existsSync(`${GeneralConfiguration.uploadDir}/${identifier}`)) {
 			fs.mkdirSync(`${GeneralConfiguration.uploadDir}/${identifier}`)
 		}
-		if (fs.existsSync(`${GeneralConfiguration.uploadDir}/${identifier}/profile`)) {
-			fs.rmSync(`${GeneralConfiguration.uploadDir}/${identifier}/profile`)
+		if (fs.existsSync(`${GeneralConfiguration.uploadDir}/${identifier}/profile.png`)) {
+			fs.rmSync(`${GeneralConfiguration.uploadDir}/${identifier}/profile.png`)
 		}
 		fs.writeFileSync(
 			`${GeneralConfiguration.uploadDir}/${identifier}/profile.png`,
@@ -29,8 +29,10 @@ export const SendFileByTypeAndIdentifier = (
 		if (!fs.existsSync(`${GeneralConfiguration.uploadDir}/${userId}/${type}`)) {
 			fs.mkdirSync(`${GeneralConfiguration.uploadDir}/${userId}/${type}`)
 		}
-		if (fs.existsSync(`${GeneralConfiguration.uploadDir}/${userId}/${type}/${identifier}`)) {
-			fs.rmSync(`${GeneralConfiguration.uploadDir}/${userId}/${type}/${identifier}`)
+		if (
+			fs.existsSync(`${GeneralConfiguration.uploadDir}/${userId}/${type}/${identifier}.png`)
+		) {
+			fs.rmSync(`${GeneralConfiguration.uploadDir}/${userId}/${type}/${identifier}.png`)
 		}
 		fs.writeFileSync(
 			`${GeneralConfiguration.uploadDir}/${userId}/${type}/${identifier}.png`,

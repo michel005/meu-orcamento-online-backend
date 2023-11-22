@@ -3,27 +3,30 @@ import { v4 as uuid } from 'uuid'
 
 export type useMySQLDatabaseReturnType<T> = {
 	database: any
-	findAll: () => Promise<T[]>
-	findMany: (query: any) => Promise<T[]>
+	findAll: (sort?: any) => Promise<T[]>
+	findMany: (query: any, sort?: any) => Promise<T[]>
 	findOne: (id: string) => Promise<T | undefined>
 	create: (value: T) => Promise<T>
 	update: (id: string, value: T) => Promise<T>
 	remove: (id: string) => Promise<T>
+	removeByQuery: (query: any) => Promise<T>
 }
 
 export const useMySQLDatabase = <T>(
 	database: any,
-	includes: string[] = []
+	includes: string[] = [],
+	autoIncrement: boolean = false
 ): useMySQLDatabaseReturnType<T> => {
 	const includesSection = includes.reduce((obj, x) => {
 		;(obj as any)[x] = true
 		return obj
 	}, {})
 
-	const findAll = async () => {
+	const findAll = async (sort?: any) => {
 		try {
 			return await database.findMany({
 				include: includesSection,
+				orderBy: sort,
 			})
 		} catch (error) {
 			console.error(error)
@@ -31,11 +34,12 @@ export const useMySQLDatabase = <T>(
 		}
 	}
 
-	const findMany = async (query: any) => {
+	const findMany = async (query: any, sort?: any) => {
 		try {
 			return await database.findMany({
 				include: includesSection,
 				where: query,
+				orderBy: sort,
 			})
 		} catch (error) {
 			console.error(error)
@@ -60,7 +64,7 @@ export const useMySQLDatabase = <T>(
 	const create = async (value: T) => {
 		return await database.create({
 			data: {
-				id: uuid(),
+				id: autoIncrement ? undefined : uuid(),
 				...value,
 			},
 		})
@@ -77,6 +81,10 @@ export const useMySQLDatabase = <T>(
 		return await database.delete({ where: { id: id } })
 	}
 
+	const removeByQuery = async (query: any) => {
+		return await database.delete({ where: query })
+	}
+
 	return {
 		findAll,
 		findMany,
@@ -84,6 +92,7 @@ export const useMySQLDatabase = <T>(
 		create,
 		update,
 		remove,
+		removeByQuery,
 		database,
 	}
 }

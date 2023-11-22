@@ -19,4 +19,6 @@ export const ErrorCode: {
 	'USER-002': 'Já existe um usuário com este e-mail',
 	'USER-003': 'Já existe um usuário com este nome de usuário',
 	'PRODUCT-001': 'Código usado por outro produto',
+	'WAITING-LIST-001': 'Produto não informado',
+	'WAITING-LIST-002': 'Cliente não informado',
 }

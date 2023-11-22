@@ -8,7 +8,7 @@ export const newError = (error: any) => {
 		}
 	} else {
 		return {
-			code: error,
+			code: error.code,
 			message: error.message,
 		}
 	}

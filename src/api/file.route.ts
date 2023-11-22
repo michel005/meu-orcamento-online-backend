@@ -12,6 +12,9 @@ export const FileRoute = express
 			if (req.params.type === 'customer') {
 				userId = (await Database.customer.findOne(req.params.identifier))?.user?.id
 			}
+			if (req.params.type === 'product') {
+				userId = (await Database.product.findOne(req.params.identifier))?.user?.id
+			}
 			if (req.params.type === 'user') {
 				let user = (
 					await Database.user_token.findMany({

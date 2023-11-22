@@ -5,7 +5,7 @@ export const ProductSchema = useSchemaValidation({
 		mandatory: false,
 	},
 	created: {
-		mandatory: true,
+		mandatory: false,
 	},
 	updated: {
 		mandatory: false,
