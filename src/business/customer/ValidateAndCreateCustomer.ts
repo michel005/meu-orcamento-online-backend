@@ -8,6 +8,7 @@ import { AddressType } from '../../types/Address.type'
 import { UserType } from '../../types/User.type'
 import { DatabaseType } from '../../types/DatabaseType'
 import { Database } from '../../middlewares/databases'
+import { GetUrlByTypeAndIdentifier } from '../files/GetUrlByTypeAndIdentifier'
 
 export const ValidateAndCreateCustomer = async (
 	value: {
@@ -43,13 +44,12 @@ export const ValidateAndCreateCustomer = async (
 	})
 
 	if (value.customer.picture) {
-		SendFileByTypeAndIdentifier(
+		newCustomer.picture = SendFileByTypeAndIdentifier(
 			'customer',
 			newCustomer.id as string,
 			value.customer.picture,
 			currentUser.id as string
 		)
-		newCustomer.picture = value.customer.picture
 	}
 
 	return {

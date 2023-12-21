@@ -1,5 +1,6 @@
 import { CustomerType } from '../../types/Customer.type'
 import { GetUrlByTypeAndIdentifier } from '../files/GetUrlByTypeAndIdentifier'
+import { Database } from '../../middlewares/databases'
 
 export const RemoveCustomerPrivateInformation = (customer: CustomerType) => {
 	return {

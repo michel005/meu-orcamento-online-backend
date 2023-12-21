@@ -23,16 +23,16 @@ export const Authentication = async (req: Request, res: Response, next: NextFunc
 				})
 			)?.[0]
 			if (!foundedUser) {
-				res.status(400).send(newError('AUTH-002'))
+				res.status(400).json(newError('AUTH-002'))
 			} else {
 				const expirationDate = DateUtils.stringToDate(foundedUser.expiration)
 				if (new Date().getTime() > expirationDate.getTime()) {
-					res.status(400).send(newError('AUTH-003'))
+					res.status(400).json(newError('AUTH-003'))
 					return
 				}
 				;(req as any).user = await Database.user.findOne(foundedUser.user_id)
 				if (!(req as any).user) {
-					res.status(400).send(newError('AUTH-003'))
+					res.status(400).json(newError('AUTH-003'))
 					return
 				}
 				next()

@@ -1,4 +1,3 @@
-import { QueryOptions } from '@prisma/client/runtime/library'
 import { v4 as uuid } from 'uuid'
 
 export type useMySQLDatabaseReturnType<T> = {

@@ -42,13 +42,17 @@ export const WaitingListRoute = express
 			if (!req.query?.product) {
 				throw newError('WAITING-LIST-001')
 			}
-			return (
-				await Database.waitingList.findMany(
-					{ product_id: req.query?.product },
-					{ id: 'asc' }
+			console.log(
+				'Michel',
+				(await Database.waitingList.findMany({ product_id: req.query?.product })).map((x) =>
+					RemoveWaitingListPrivateInformation(x)
 				)
-			).map((x) => {
-				return RemoveWaitingListPrivateInformation(x)
-			})
+			)
+			const allItems = await Database.waitingList.findMany({ product_id: req.query?.product })
+			const newList = []
+			for (const item of allItems) {
+				newList.push(await RemoveWaitingListPrivateInformation(item))
+			}
+			return newList
 		})
 	})

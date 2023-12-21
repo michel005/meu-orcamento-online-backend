@@ -21,7 +21,7 @@ export const ProductValidation = async ({ value }: { value: ProductType }) => {
 	if (value.seller_id) {
 		const customerFound = await Database.customer.findOne(value.seller_id)
 		if (!customerFound) {
-			errors.customer_id = newError('DATABASE-002')
+			errors.seller_id = newError('DATABASE-002')
 		}
 	}
 

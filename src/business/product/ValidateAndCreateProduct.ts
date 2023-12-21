@@ -45,14 +45,13 @@ export const ValidateAndCreateProduct = async ({
 	const newProduct = await Database.product.create(value)
 
 	RemoveFileByTypeAndIdentifier('product', newProduct.id as string, currentUser.id as string)
-	if (value?.picture) {
-		SendFileByTypeAndIdentifier(
+	if (data.product?.picture) {
+		newProduct.picture = SendFileByTypeAndIdentifier(
 			'product',
 			newProduct.id as string,
-			value.picture,
+			data.product?.picture,
 			currentUser.id as string
 		)
-		newProduct.picture = value.picture
 	}
 
 	return {

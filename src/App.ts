@@ -16,7 +16,6 @@ export class App {
 			.use(express.urlencoded({ extended: true, limit: '10mb' }))
 			.use(cors())
 			.use(Authentication)
-			.use(express.static('/uploads'))
 			.use(
 				'/api',
 				express

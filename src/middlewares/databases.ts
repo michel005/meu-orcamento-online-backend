@@ -24,11 +24,7 @@ class Databases {
 			'user',
 			'product_waiting_list',
 		])
-		this.waitingList = useMySQLDatabase(
-			prisma.product_waiting_list,
-			['customer', 'product'],
-			true
-		)
+		this.waitingList = useMySQLDatabase(prisma.product_waiting_list, [], true)
 		this.address = useMySQLDatabase(prisma.address)
 	}
 }

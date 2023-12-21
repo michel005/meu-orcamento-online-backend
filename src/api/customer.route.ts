@@ -25,6 +25,12 @@ export const CustomerRoute = express
 			if (!foundedCustomer) {
 				throw newError('DATABASE-002')
 			}
+			await Database.waitingList.removeByQuery({
+				customer_id: req.params.id,
+			})
+			await Database.product.removeByQuery({
+				customer_id: req.params.id,
+			})
 			await Database.customer.remove(req.params.id)
 			return
 		})
