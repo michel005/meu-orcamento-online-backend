@@ -1,15 +1,10 @@
-import { ErrorCode } from '../const/ErrorCode'
+import allErrors from '../assets/ErrorCode.json'
 
-export const newError = (error: any) => {
-	if (ErrorCode?.[error as string]) {
+export class ErrorUtils {
+	static getError = (code: string) => {
 		return {
-			code: error,
-			message: ErrorCode[error],
-		}
-	} else {
-		return {
-			code: error.code,
-			message: error.message,
+			code,
+			message: allErrors?.[code as keyof typeof allErrors],
 		}
 	}
 }

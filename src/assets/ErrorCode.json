@@ -1,0 +1,17 @@
+{
+	"AUTH-001": "Token não informado",
+	"AUTH-002": "Token inválido",
+	"AUTH-003": "Token expirado",
+	"AUTH-004": "Usuário e/ou senha inválido",
+	"VALIDATION-001": "ID não é um campo requisitado para uma operação de cadastro",
+	"VALIDATION-002": "ID é um campo obrigatório para uma operação de alteração",
+	"VALIDATION-003": "Campo obrigatório não informado",
+	"VALIDATION-004": "ID inválido",
+	"CUSTOMER-001": "Cliente não encontrado",
+	"CUSTOMER-002": "Tipo de pessoa deve ser PF ou PJ",
+	"CUSTOMER-003": "Tipo de documento deve ser RG, CPF ou CNPJ",
+	"CUSTOMER-004": "Cliente já cadastrado com este documento",
+	"PRODUCT-001": "A situação do produto esta inválida",
+	"PRODUCT-002": "Código já utilizado",
+	"PRODUCT-003": "Produto não encontrado"
+}
