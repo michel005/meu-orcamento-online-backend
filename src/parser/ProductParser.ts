@@ -31,14 +31,10 @@ export const ProductParser = ({
 	product.price = UndefinedOrValue(sanitizedContent?.price)
 	product.status = UndefinedOrValue(sanitizedContent?.status)
 	product.seller_id = UndefinedOrValueId(sanitizedContent?.seller_id)
-	product.customer_id = UndefinedOrValueId(sanitizedContent?.customer_id)
 
 	if (!hideEntity) {
 		product.seller = sanitizedContent.seller
 			? CustomerParser(sanitizedContent.seller, true)
-			: undefined
-		product.customer = sanitizedContent.customer
-			? CustomerParser(sanitizedContent.customer, true)
 			: undefined
 	}
 	if (!hidePrivate) {

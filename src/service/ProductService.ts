@@ -1,7 +1,6 @@
 import { Collection, ObjectId } from 'mongodb'
 import { ProductBusiness } from '../business/ProductBusiness'
 import { ProductParser } from '../parser/ProductParser'
-import { CustomerType } from '../types/CustomerType'
 import { ProductType } from '../types/ProductType'
 import { UserType } from '../types/UserType'
 import { DateUtils } from '../utils/DateUtils'
@@ -51,20 +50,22 @@ export class ProductService {
 			...product,
 			_id: id,
 		})
+		const valueToSave = JSON.parse(
+			JSON.stringify({
+				...product,
+				_id: undefined,
+				user_id: undefined,
+				created: undefined,
+				updated: DateUtils.dateTimeToString(new Date()),
+			})
+		)
+		valueToSave.seller_id = new ObjectId(valueToSave.seller_id)
 		await ProductService.productDatabase.updateOne(
 			{
 				_id: id,
 			},
 			{
-				$set: JSON.parse(
-					JSON.stringify({
-						...product,
-						_id: undefined,
-						user_id: undefined,
-						created: undefined,
-						updated: DateUtils.dateTimeToString(new Date()),
-					})
-				),
+				$set: valueToSave,
 			}
 		)
 		const updatedProduct = await ProductService.productDatabase.findOne({
@@ -90,22 +91,6 @@ export class ProductService {
 	static getAll = async ({ currentUser }: { currentUser: UserType }) => {
 		const allCustomersByUser = await ProductService.productDatabase
 			.aggregate([
-				{
-					$lookup: {
-						from: 'customer',
-						localField: 'customer_id',
-						foreignField: '_id',
-						as: 'customer',
-						pipeline: [
-							{
-								$limit: 1,
-							},
-						],
-					},
-				},
-				{
-					$unwind: '$customer',
-				},
 				{
 					$lookup: {
 						from: 'customer',

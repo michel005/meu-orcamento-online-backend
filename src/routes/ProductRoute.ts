@@ -27,7 +27,10 @@ export const ProductRoute = () => {
 		.put('/product', (req, res) => {
 			BusinessRouteProcessor(res, async () => {
 				const value: ProductType = ProductParser({
-					content: req.body,
+					content: {
+						...req.body,
+						_id: undefined,
+					},
 					hideEntity: true,
 				})
 				if (!ObjectId.isValid(req.query.id as string)) {

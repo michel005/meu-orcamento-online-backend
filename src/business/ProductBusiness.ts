@@ -32,12 +32,6 @@ export class ProductBusiness {
 			'description',
 			'VALIDATION-003'
 		)
-		errors.addConditionally(!product.customer_id, 'customer_id', 'VALIDATION-003')
-		errors.addConditionally(
-			!!product.customer_id && !ObjectId.isValid(product.customer_id),
-			'customer_id',
-			'VALIDATION-004'
-		)
 		errors.addConditionally(!product.seller_id, 'seller_id', 'VALIDATION-003')
 		errors.addConditionally(
 			!!product.seller_id && !ObjectId.isValid(product.seller_id),

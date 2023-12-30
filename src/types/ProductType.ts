@@ -8,8 +8,6 @@ export type ProductType = {
 	user?: UserType
 	seller_id?: ObjectId
 	seller?: CustomerType
-	customer_id?: ObjectId
-	customer?: CustomerType
 	created?: string
 	updated?: string
 	code?: string

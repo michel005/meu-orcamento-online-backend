@@ -55,15 +55,13 @@ export class CustomerService {
 				_id: id,
 			},
 			{
-				$set: JSON.parse(
-					JSON.stringify({
-						...customer,
-						_id: undefined,
-						user_id: undefined,
-						created: undefined,
-						updated: DateUtils.dateTimeToString(new Date()),
-					})
-				),
+				$set: {
+					...customer,
+					_id: undefined,
+					user_id: undefined,
+					created: undefined,
+					updated: DateUtils.dateTimeToString(new Date()),
+				},
 			}
 		)
 		const updatedUser = await CustomerService.customerDatabase.findOne({

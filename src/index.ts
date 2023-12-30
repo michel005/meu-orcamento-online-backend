@@ -14,7 +14,7 @@ import { ProductBusiness } from './business/ProductBusiness'
 import { ProductService } from './service/ProductService'
 import { ProductType } from './types/ProductType'
 
-const client = new MongoClient('mongodb://localhost:27017')
+const client = new MongoClient('mongodb://127.0.0.1:27017')
 const database = client.db('meuOrcamentoOnline')
 
 CustomerBusiness.databaseClient = database

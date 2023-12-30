@@ -1,6 +1,5 @@
 import { ObjectId } from 'mongodb'
 import { AddressType } from './AddressType'
-import { UserType } from './UserType'
 
 export type CustomerType = {
 	_id?: ObjectId
