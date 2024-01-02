@@ -160,7 +160,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/CustomerType'
                 '400':
-                    description: 'Erro ao alterar produto'
+                    description: 'Erro ao alterar cliente'
                     content:
                         application/json:
                             schema:
@@ -201,6 +201,36 @@ paths:
                                 items:
                                     type: object
                                     $ref: '#/components/schemas/CustomerType'
+    /customer/prop/{propName}/{propValue}:
+        put:
+            tags:
+                - Cliente
+            summary: 'Alterar a propriedade de um cliente'
+            security:
+                - bearerAuth: []
+            parameters:
+                - in: path
+                  name: propName
+                  description: 'Nome da propriedade'
+                - in: path
+                  name: propValue
+                  description: 'Valor da propriedade'
+                - in: query
+                  name: id
+                  description: 'ID do cliente'
+            responses:
+                '200':
+                    description: 'Cliente alterado com sucesso'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CustomerType'
+                '400':
+                    description: 'Erro ao alterar cliente'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorType'
     /product:
         post:
             tags:

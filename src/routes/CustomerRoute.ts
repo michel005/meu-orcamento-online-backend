@@ -34,6 +34,19 @@ export const CustomerRoute = () => {
 				})
 			})
 		})
+		.put('/customer/prop/:propName/:propValue', (req, res) => {
+			BusinessRouteProcessor(res, async () => {
+				if (!ObjectId.isValid(req.query.id as string)) {
+					throw ErrorUtils.getError('VALIDATION-004')
+				}
+				await CustomerService.updateProperty({
+					id: new ObjectId(req.query.id as string),
+					currentUser: (req as any).user,
+					propName: req.params.propName,
+					propValue: req.params.propValue,
+				})
+			})
+		})
 		.delete('/customer', (req, res) => {
 			BusinessRouteProcessor(res, async () => {
 				if (!ObjectId.isValid(req.query.id as string)) {

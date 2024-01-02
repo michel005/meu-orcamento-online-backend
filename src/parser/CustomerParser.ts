@@ -26,3 +26,10 @@ export const CustomerParser = (content: any, hidePrivate = false): CustomerType 
 
 	return JSON.parse(JSON.stringify(customer))
 }
+
+export const CustomerPropParser = (propName: string, propValue: string) => {
+	if (['active', 'favorite'].includes(propName)) {
+		return propValue === 'true'
+	}
+	return propValue
+}

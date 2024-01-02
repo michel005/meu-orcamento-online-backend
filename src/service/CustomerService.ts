@@ -1,6 +1,6 @@
 import { Collection, ObjectId } from 'mongodb'
 import { CustomerBusiness } from '../business/CustomerBusiness'
-import { CustomerParser } from '../parser/CustomerParser'
+import { CustomerParser, CustomerPropParser } from '../parser/CustomerParser'
 import { CustomerType } from '../types/CustomerType'
 import { UserType } from '../types/UserType'
 import { DateUtils } from '../utils/DateUtils'
@@ -69,6 +69,39 @@ export class CustomerService {
 			user_id: currentUser._id,
 		})
 		return CustomerParser(updatedUser, true)
+	}
+
+	static updateProperty = async ({
+		id,
+		propName,
+		propValue,
+		currentUser,
+	}: {
+		id: ObjectId
+		propName: string
+		propValue: string
+		currentUser: UserType
+	}) => {
+		const savedCustomer: CustomerType | null = await CustomerService.customerDatabase.findOne({
+			_id: id,
+			user_id: currentUser._id,
+		})
+		if (!savedCustomer) {
+			throw ErrorUtils.getError('CUSTOMER-001')
+		}
+		if (!['favorite', 'active'].includes(propName)) {
+			throw ErrorUtils.getError('VALIDATION-005')
+		}
+		await CustomerService.customerDatabase.updateOne(
+			{
+				_id: id,
+			},
+			{
+				$set: {
+					[propName]: CustomerPropParser(propName, propValue),
+				},
+			}
+		)
 	}
 
 	static remove = async ({ id, currentUser }: { id: ObjectId; currentUser: UserType }) => {

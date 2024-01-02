@@ -7,6 +7,7 @@
 	"VALIDATION-002": "ID é um campo obrigatório para uma operação de alteração",
 	"VALIDATION-003": "Campo obrigatório não informado",
 	"VALIDATION-004": "ID inválido",
+	"VALIDATION-005": "Propriedade inválida",
 	"CUSTOMER-001": "Cliente não encontrado",
 	"CUSTOMER-002": "Tipo de pessoa deve ser PF ou PJ",
 	"CUSTOMER-003": "Tipo de documento deve ser RG, CPF ou CNPJ",
