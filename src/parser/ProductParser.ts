@@ -1,6 +1,8 @@
 import { ObjectId } from 'mongodb'
 import { ProductType } from '../types/ProductType'
 import { CustomerParser } from './CustomerParser'
+import { PictureService } from '../service/PictureService'
+import { PictureParser } from './PictureParser'
 
 const UndefinedOrValue = (value: any) => {
 	return value === undefined ? undefined : value
@@ -39,6 +41,13 @@ export const ProductParser = ({
 	}
 	if (!hidePrivate) {
 		product.user_id = UndefinedOrValueId(sanitizedContent?.user_id)
+	}
+	if (product?._id) {
+		product.picture = PictureParser(
+			content.picture,
+			'product',
+			`${sanitizedContent?.seller_id}_${sanitizedContent?._id}`
+		)
 	}
 
 	return product

@@ -1,5 +1,7 @@
 import { UserType } from '../types/UserType'
 import { AddressParser } from './AddressParser'
+import { PictureService } from '../service/PictureService'
+import { PictureParser } from './PictureParser'
 
 export const UserParser = (content: any, hidePrivate = false): UserType => {
 	const user: UserType = {}
@@ -14,6 +16,9 @@ export const UserParser = (content: any, hidePrivate = false): UserType => {
 	user.email = content?.email || undefined
 	user.phone = content?.phone || undefined
 	user.birthday = content?.birthday || undefined
+	if (content.picture) {
+		user.picture = PictureParser(content.picture, 'user', content.user_name)
+	}
 	user.address = AddressParser(content?.address || {})
 	return user
 }

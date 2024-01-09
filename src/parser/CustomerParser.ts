@@ -1,5 +1,8 @@
 import { CustomerType } from '../types/CustomerType'
 import { AddressParser } from './AddressParser'
+import { PictureService } from '../service/PictureService'
+import { UserType } from '../types/UserType'
+import { PictureParser } from './PictureParser'
 
 const UndefinedOrValue = (value: any) => {
 	return value === undefined ? undefined : value
@@ -19,6 +22,7 @@ export const CustomerParser = (content: any, hidePrivate = false): CustomerType 
 	customer.email = UndefinedOrValue(content?.email)
 	customer.phone = UndefinedOrValue(content?.phone)
 	customer.birthday = UndefinedOrValue(content?.birthday)
+	customer.picture = PictureParser(content.picture, 'customer', content?._id.toString())
 	customer.address = AddressParser(content?.address || {})
 	if (!hidePrivate) {
 		customer.user_id = UndefinedOrValue(content?.user_id)

@@ -1,8 +1,10 @@
 import { ObjectId } from 'mongodb'
 import { AddressType } from './AddressType'
+import { PictureType } from './PictureType'
 
 export type CustomerType = {
 	_id?: ObjectId
+	picture?: PictureType
 	created?: string
 	updated?: string
 	active?: boolean

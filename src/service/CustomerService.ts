@@ -5,9 +5,23 @@ import { CustomerType } from '../types/CustomerType'
 import { UserType } from '../types/UserType'
 import { DateUtils } from '../utils/DateUtils'
 import { ErrorUtils } from '../utils/ErrorUtils'
+import { PictureType } from '../types/PictureType'
+import { PictureService } from './PictureService'
 
 export class CustomerService {
 	static customerDatabase: Collection<CustomerType>
+
+	static saveImage = (picture?: PictureType, id?: ObjectId) => {
+		if (picture) {
+			if (picture.type === 'file' && id) {
+				PictureService.save(picture.value, 'customer', id.toString())
+			}
+		} else {
+			if (id) {
+				PictureService.remove('customer', id.toString())
+			}
+		}
+	}
 
 	static create = async ({
 		customer,
@@ -18,15 +32,19 @@ export class CustomerService {
 	}) => {
 		await CustomerBusiness.validate(customer)
 		const insertedCustomer = await CustomerService.customerDatabase.insertOne({
-			...customer,
-			_id: undefined,
-			user_id: currentUser._id,
+			full_name: customer.full_name,
+			email: customer.email,
+			person_type: customer.person_type,
+			document_type: customer.document_type,
+			document_number: customer.document_number,
+			address: customer.address,
 			created: DateUtils.dateTimeToString(new Date()),
 		})
 
 		const refreshCustomer = await CustomerService.customerDatabase.findOne({
 			_id: insertedCustomer.insertedId,
 		})
+		CustomerService.saveImage(customer.picture, insertedCustomer.insertedId)
 		return CustomerParser(refreshCustomer, true)
 	}
 
@@ -56,19 +74,21 @@ export class CustomerService {
 			},
 			{
 				$set: {
-					...customer,
-					_id: undefined,
-					user_id: undefined,
-					created: undefined,
-					updated: DateUtils.dateTimeToString(new Date()),
+					full_name: customer.full_name,
+					email: customer.email,
+					person_type: customer.person_type,
+					document_type: customer.document_type,
+					document_number: customer.document_number,
+					address: customer.address,
 				},
 			}
 		)
-		const updatedUser = await CustomerService.customerDatabase.findOne({
+		const updatedCustomer = await CustomerService.customerDatabase.findOne({
 			_id: id,
 			user_id: currentUser._id,
 		})
-		return CustomerParser(updatedUser, true)
+		CustomerService.saveImage(customer.picture, id)
+		return CustomerParser(updatedCustomer, true)
 	}
 
 	static updateProperty = async ({
@@ -133,7 +153,6 @@ export class CustomerService {
 		const allCustomersByUser = await CustomerService.customerDatabase
 			.find()
 			.filter({
-				...extraFilters,
 				user_id: currentUser._id,
 			})
 			.toArray()

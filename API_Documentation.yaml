@@ -144,7 +144,6 @@ paths:
             parameters:
                 - in: query
                   name: id
-                  type: string
                   description: 'ID do cliente a ser alterado'
             requestBody:
                 description: 'Cliente'
@@ -174,7 +173,6 @@ paths:
             parameters:
                 - in: query
                   name: id
-                  type: string
                   description: 'ID do cliente a ser removido'
             responses:
                 '200':
@@ -199,7 +197,6 @@ paths:
                             schema:
                                 type: array
                                 items:
-                                    type: object
                                     $ref: '#/components/schemas/CustomerType'
     /customer/prop/{propName}/{propValue}:
         put:
@@ -266,7 +263,6 @@ paths:
             parameters:
                 - in: query
                   name: id
-                  type: string
                   description: 'ID do produto a ser alterado'
             requestBody:
                 description: 'Cliente'
@@ -296,7 +292,6 @@ paths:
             parameters:
                 - in: query
                   name: id
-                  type: string
                   description: 'ID do produto a ser removido'
             responses:
                 '200':
@@ -321,8 +316,71 @@ paths:
                             schema:
                                 type: array
                                 items:
-                                    type: object
                                     $ref: '#/components/schemas/ProductType'
+    /picture/{type}/{id}:
+        post:
+            tags:
+                - Imagem
+            summary: 'Fazer o upload de uma imagem'
+            security:
+                - bearerAuth: []
+            parameters:
+                - in: path
+                  name: type
+                  description: 'Tipo categorizador da imagem'
+                - in: path
+                  name: id
+                  description: 'Identificador da imagem'
+            requestBody:
+                description: 'Imagem'
+                content:
+                    application/*:
+                        schema:
+                            type: string
+                            format: binary
+            responses:
+                '200':
+                    description: 'Imagem salva com sucesso'
+        delete:
+            tags:
+                - Imagem
+            summary: 'Fazer o upload de uma imagem'
+            security:
+                - bearerAuth: []
+            parameters:
+                - in: path
+                  name: type
+                  description: 'Tipo categorizador da imagem'
+                - in: path
+                  name: id
+                  description: 'Identificador da imagem'
+            responses:
+                200:
+                    description: 'Imagem excluida com sucesso'
+        get:
+            tags:
+                - Imagem
+            summary: 'Buscar uma imagem'
+            parameters:
+                - in: path
+                  name: type
+                  description: 'Tipo categorizador da imagem'
+                - in: path
+                  name: id
+                  description: 'Identificador da imagem'
+                - in: query
+                  name: size
+                  description: 'Tamanho da imagem'
+            responses:
+                200:
+                    description: 'Imagem encontrada com sucesso'
+                404:
+                    description: 'Imagem não encontrada'
+                    content:
+                        application/octet-stream:
+                            schema:
+                                type: string
+                                format: binary
 components:
     securitySchemes:
         bearerAuth:

@@ -5,11 +5,14 @@ import { ErrorUtils } from '../utils/ErrorUtils'
 import { DateUtils } from '../utils/DateUtils'
 import { UserType } from '../types/UserType'
 import { UserParser } from '../parser/UserParser'
+import { PictureService } from '../service/PictureService'
 
 const publicRoutes = [
 	['POST', '/api/user/login'],
 	['POST', '/api/user'],
-	['GET', '/api/file/:type/:identifier'],
+	['POST', '/api/picture/:type/:identifier'],
+	['DELETE', '/api/picture/:type/:identifier'],
+	['GET', '/api/picture/:type/:identifier'],
 ]
 
 export const AuthenticationMiddleware = (database: Db) => {
@@ -43,7 +46,7 @@ export const AuthenticationMiddleware = (database: Db) => {
 								})
 								.then((response2) => {
 									if (response2) {
-										req.user = response2
+										req.user = UserParser(response2, false)
 										next()
 									} else {
 										res.status(400).json(ErrorUtils.getError('AUTH-002'))

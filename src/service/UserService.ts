@@ -5,10 +5,24 @@ import { DateUtils } from '../utils/DateUtils'
 import { UserType } from '../types/UserType'
 import { UserBusiness } from '../business/UserBusiness'
 import { UserParser } from '../parser/UserParser'
+import { PictureService } from './PictureService'
+import { PictureType } from '../types/PictureType'
 
 export class UserService {
 	static userDatabase: Collection<UserType>
 	static userTokenDatabase: Collection
+
+	static saveImage = (picture?: PictureType, userName?: string) => {
+		if (picture) {
+			if (picture.type === 'file' && userName) {
+				PictureService.save(picture.value, 'user', userName)
+			}
+		} else {
+			if (userName) {
+				PictureService.remove('user', userName)
+			}
+		}
+	}
 
 	static login = async ({ user_name, password }: { user_name: string; password: string }) => {
 		const userFound = await UserService.userDatabase.findOne({
@@ -39,6 +53,7 @@ export class UserService {
 			...user,
 			created: DateUtils.dateTimeToString(new Date()),
 		})
+		UserService.saveImage(user.picture, user.user_name)
 		return UserParser(user, true)
 	}
 
@@ -49,21 +64,20 @@ export class UserService {
 				_id: currentUser._id,
 			},
 			{
-				$set: JSON.parse(
-					JSON.stringify({
-						...user,
-						_id: undefined,
-						created: undefined,
-						updated: DateUtils.dateTimeToString(new Date()),
-						user_name: undefined,
-						password: undefined,
-					})
-				),
+				$set: {
+					full_name: user.full_name,
+					email: user.email,
+					birthday: user.birthday,
+					phone: user.phone,
+					address: user.address,
+					updated: DateUtils.dateTimeToString(new Date()),
+				},
 			}
 		)
 		const updatedUser = await UserService.userDatabase.findOne({
 			_id: currentUser._id,
 		})
+		UserService.saveImage(user.picture, user.user_name)
 		return UserParser(updatedUser, true)
 	}
 }

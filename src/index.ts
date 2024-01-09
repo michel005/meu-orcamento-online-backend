@@ -13,6 +13,7 @@ import { ProductRoute } from './routes/ProductRoute'
 import { ProductBusiness } from './business/ProductBusiness'
 import { ProductService } from './service/ProductService'
 import { ProductType } from './types/ProductType'
+import { PictureRoute } from './routes/PictureRoute'
 
 const client = new MongoClient('mongodb://127.0.0.1:27017')
 const database = client.db('meuOrcamentoOnline')
@@ -27,17 +28,17 @@ ProductService.productDatabase = database.collection<ProductType>('product')
 
 const server = express()
 server.use(cors())
-server.use((req, res, next) => {
-	res.header('Access-Control-Allow-Origin', '*')
-	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-	next()
-})
 server.use(express.json({ limit: '10mb' }))
 server.use(express.urlencoded({ extended: true, limit: '10mb' }))
 server.use(AuthenticationMiddleware(database))
 server.use(
 	'/api',
-	express.Router().use(UserRoute(database)).use(CustomerRoute()).use(ProductRoute())
+	express
+		.Router()
+		.use(UserRoute(database))
+		.use(CustomerRoute())
+		.use(ProductRoute())
+		.use(PictureRoute())
 )
 
 server.listen(8080, () => {

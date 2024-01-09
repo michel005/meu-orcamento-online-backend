@@ -14,5 +14,6 @@
 	"CUSTOMER-004": "Cliente já cadastrado com este documento",
 	"PRODUCT-001": "A situação do produto esta inválida",
 	"PRODUCT-002": "Código já utilizado",
-	"PRODUCT-003": "Produto não encontrado"
+	"PRODUCT-003": "Produto não encontrado",
+	"PICTURE-001": "Imagem não encontrada"
 }

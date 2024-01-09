@@ -1,9 +1,11 @@
 import { ObjectId } from 'mongodb'
 import { CustomerType } from './CustomerType'
 import { UserType } from './UserType'
+import { PictureType } from './PictureType'
 
 export type ProductType = {
 	_id?: ObjectId
+	picture?: PictureType
 	user_id?: ObjectId
 	user?: UserType
 	seller_id?: ObjectId
