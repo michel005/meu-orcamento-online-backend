@@ -10,27 +10,22 @@ export const CustomerRoute = () => {
 	return express
 		.Router()
 		.post('/customer', (req, res) => {
-			const value: CustomerType = CustomerParser({
-				...req.body,
-				_id: undefined,
-			})
 			BusinessRouteProcessor(res, async () => {
 				return await CustomerService.create({
-					customer: value,
+					customer: req.body,
 					currentUser: (req as any).user,
 				})
 			})
 		})
 		.put('/customer', (req, res) => {
 			BusinessRouteProcessor(res, async () => {
-				const value: CustomerType = CustomerParser(req.body)
 				if (!ObjectId.isValid(req.query.id as string)) {
 					throw ErrorUtils.getError('VALIDATION-004')
 				}
 				return await CustomerService.update({
 					id: new ObjectId(req.query.id as string),
 					currentUser: (req as any).user,
-					customer: value,
+					customer: req.body,
 				})
 			})
 		})
@@ -39,7 +34,7 @@ export const CustomerRoute = () => {
 				if (!ObjectId.isValid(req.query.id as string)) {
 					throw ErrorUtils.getError('VALIDATION-004')
 				}
-				await CustomerService.updateProperty({
+				return await CustomerService.updateProperty({
 					id: new ObjectId(req.query.id as string),
 					currentUser: (req as any).user,
 					propName: req.params.propName,

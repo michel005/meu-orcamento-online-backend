@@ -1,11 +1,17 @@
 import { PictureService } from '../service/PictureService'
 import { PictureType } from '../types/PictureType'
 
-export const PictureParser = (content: any, type: string, id: string): PictureType | undefined => {
+export const PictureParser = (
+	content: any,
+	type: string,
+	id: string,
+	userName?: string,
+	timestamp?: string
+): PictureType | undefined => {
 	if (!content) {
-		if (PictureService.haveFile(type, id)) {
+		if (PictureService.haveFile(type, id, userName)) {
 			return {
-				value: PictureService.getUrl(type, id),
+				value: PictureService.getUrl(type, id, timestamp),
 				type: 'url',
 			}
 		} else {

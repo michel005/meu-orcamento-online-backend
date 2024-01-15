@@ -8,7 +8,11 @@ const UndefinedOrValue = (value: any) => {
 	return value === undefined ? undefined : value
 }
 
-export const CustomerParser = (content: any, hidePrivate = false): CustomerType => {
+export const CustomerParser = (
+	content: any,
+	hidePrivate = false,
+	userName?: string
+): CustomerType => {
 	const customer: CustomerType = {}
 	customer._id = UndefinedOrValue(content?._id)
 	customer.created = UndefinedOrValue(content?.created)
@@ -22,7 +26,13 @@ export const CustomerParser = (content: any, hidePrivate = false): CustomerType 
 	customer.email = UndefinedOrValue(content?.email)
 	customer.phone = UndefinedOrValue(content?.phone)
 	customer.birthday = UndefinedOrValue(content?.birthday)
-	customer.picture = PictureParser(content.picture, 'customer', content?._id.toString())
+	customer.picture = PictureParser(
+		content.picture,
+		'customer',
+		content?._id.toString(),
+		userName,
+		customer.updated || customer.created
+	)
 	customer.address = AddressParser(content?.address || {})
 	if (!hidePrivate) {
 		customer.user_id = UndefinedOrValue(content?.user_id)

@@ -20,15 +20,13 @@ export const UserRoute = (database: Db) => {
 		})
 		.post('/user', (req, res) => {
 			BusinessRouteProcessor(res, async () => {
-				const value: UserType = UserParser(req.body)
-				return await UserService.create({ user: value })
+				return await UserService.create({ user: req.body })
 			})
 		})
 		.put('/user', (req, res) => {
-			const value: UserType = UserParser(req.body)
 			BusinessRouteProcessor(res, async () => {
 				return UserService.update({
-					user: value,
+					user: req.body,
 					currentUser: (req as any).user,
 				})
 			})

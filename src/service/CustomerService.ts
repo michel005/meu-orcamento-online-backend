@@ -11,14 +11,25 @@ import { PictureService } from './PictureService'
 export class CustomerService {
 	static customerDatabase: Collection<CustomerType>
 
-	static saveImage = (picture?: PictureType, id?: ObjectId) => {
+	static saveImage = ({
+		picture,
+		customerId,
+		userName,
+	}: {
+		picture?: PictureType
+		customerId?: string
+		userName?: string
+	}) => {
+		if (!userName) {
+			return
+		}
 		if (picture) {
-			if (picture.type === 'file' && id) {
-				PictureService.save(picture.value, 'customer', id.toString())
+			if (picture.type === 'file' && customerId) {
+				PictureService.save(picture.value, 'customer', customerId, userName)
 			}
 		} else {
-			if (id) {
-				PictureService.remove('customer', id.toString())
+			if (customerId) {
+				PictureService.remove('customer', customerId, userName)
 			}
 		}
 	}
@@ -34,18 +45,27 @@ export class CustomerService {
 		const insertedCustomer = await CustomerService.customerDatabase.insertOne({
 			full_name: customer.full_name,
 			email: customer.email,
+			phone: customer.phone,
+			birthday: customer.birthday,
 			person_type: customer.person_type,
 			document_type: customer.document_type,
 			document_number: customer.document_number,
 			address: customer.address,
+			user_id: currentUser._id,
+			active: true,
+			favorite: false,
 			created: DateUtils.dateTimeToString(new Date()),
 		})
 
 		const refreshCustomer = await CustomerService.customerDatabase.findOne({
 			_id: insertedCustomer.insertedId,
 		})
-		CustomerService.saveImage(customer.picture, insertedCustomer.insertedId)
-		return CustomerParser(refreshCustomer, true)
+		CustomerService.saveImage({
+			picture: customer.picture,
+			customerId: insertedCustomer.insertedId.toString(),
+			userName: currentUser?.user_name,
+		})
+		return CustomerParser(refreshCustomer, true, currentUser.user_name)
 	}
 
 	static update = async ({
@@ -76,6 +96,8 @@ export class CustomerService {
 				$set: {
 					full_name: customer.full_name,
 					email: customer.email,
+					phone: customer.phone,
+					birthday: customer.birthday,
 					person_type: customer.person_type,
 					document_type: customer.document_type,
 					document_number: customer.document_number,
@@ -87,8 +109,12 @@ export class CustomerService {
 			_id: id,
 			user_id: currentUser._id,
 		})
-		CustomerService.saveImage(customer.picture, id)
-		return CustomerParser(updatedCustomer, true)
+		CustomerService.saveImage({
+			picture: customer.picture,
+			customerId: id.toString(),
+			userName: currentUser?.user_name,
+		})
+		return CustomerParser(updatedCustomer, true, currentUser.user_name)
 	}
 
 	static updateProperty = async ({
@@ -122,6 +148,11 @@ export class CustomerService {
 				},
 			}
 		)
+		const updatedCustomer = await CustomerService.customerDatabase.findOne({
+			_id: id,
+			user_id: currentUser._id,
+		})
+		return CustomerParser(updatedCustomer, true, currentUser.user_name)
 	}
 
 	static remove = async ({ id, currentUser }: { id: ObjectId; currentUser: UserType }) => {
@@ -135,6 +166,11 @@ export class CustomerService {
 		await CustomerService.customerDatabase.deleteOne({
 			_id: savedCustomer?._id,
 		})
+	}
+
+	static getOne = async ({ id, currentUser }: { id: ObjectId; currentUser: UserType }) => {
+		const customerFind = await CustomerService.customerDatabase.findOne(id)
+		return CustomerParser(customerFind, true, currentUser.user_name)
 	}
 
 	static getAll = async ({
@@ -156,6 +192,8 @@ export class CustomerService {
 				user_id: currentUser._id,
 			})
 			.toArray()
-		return allCustomersByUser.map((customer) => CustomerParser(customer, true))
+		return allCustomersByUser.map((customer) =>
+			CustomerParser(customer, true, currentUser.user_name)
+		)
 	}
 }

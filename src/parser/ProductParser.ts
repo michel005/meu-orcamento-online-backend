@@ -3,6 +3,7 @@ import { ProductType } from '../types/ProductType'
 import { CustomerParser } from './CustomerParser'
 import { PictureService } from '../service/PictureService'
 import { PictureParser } from './PictureParser'
+import { UserType } from '../types/UserType'
 
 const UndefinedOrValue = (value: any) => {
 	return value === undefined ? undefined : value
@@ -16,10 +17,12 @@ export const ProductParser = ({
 	content,
 	hidePrivate = false,
 	hideEntity = false,
+	currentUser,
 }: {
 	content: any
 	hidePrivate?: boolean
 	hideEntity?: boolean
+	currentUser: UserType
 }): ProductType => {
 	const product: ProductType = {}
 	const sanitizedContent = JSON.parse(JSON.stringify(content))
@@ -36,19 +39,19 @@ export const ProductParser = ({
 
 	if (!hideEntity) {
 		product.seller = sanitizedContent.seller
-			? CustomerParser(sanitizedContent.seller, true)
+			? CustomerParser(sanitizedContent.seller, true, currentUser.user_name)
 			: undefined
 	}
 	if (!hidePrivate) {
 		product.user_id = UndefinedOrValueId(sanitizedContent?.user_id)
 	}
-	if (product?._id) {
-		product.picture = PictureParser(
-			content.picture,
-			'product',
-			`${sanitizedContent?.seller_id}_${sanitizedContent?._id}`
-		)
-	}
+	product.picture = PictureParser(
+		content.picture,
+		'product',
+		sanitizedContent?._id,
+		currentUser.user_name || '',
+		sanitizedContent.updated || sanitizedContent.created
+	)
 
 	return product
 }

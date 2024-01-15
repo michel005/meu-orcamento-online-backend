@@ -5,9 +5,35 @@ import { ProductType } from '../types/ProductType'
 import { UserType } from '../types/UserType'
 import { DateUtils } from '../utils/DateUtils'
 import { ErrorUtils } from '../utils/ErrorUtils'
+import { PictureType } from '../types/PictureType'
+import { PictureService } from './PictureService'
+import { CustomerService } from './CustomerService'
 
 export class ProductService {
 	static productDatabase: Collection<ProductType>
+
+	static saveImage = ({
+		picture,
+		productId,
+		userName,
+	}: {
+		picture?: PictureType
+		productId?: string
+		userName?: string
+	}) => {
+		if (!userName) {
+			return
+		}
+		if (picture) {
+			if (picture.type === 'file' && productId) {
+				PictureService.save(picture.value, 'product', productId, userName)
+			}
+		} else {
+			if (productId) {
+				PictureService.remove('product', productId, userName)
+			}
+		}
+	}
 
 	static create = async ({
 		product,
@@ -18,16 +44,29 @@ export class ProductService {
 	}) => {
 		await ProductBusiness.validate(product)
 		const insertedProduct = await ProductService.productDatabase.insertOne({
-			...product,
-			_id: undefined,
-			user_id: currentUser._id,
 			created: DateUtils.dateTimeToString(new Date()),
+			code: product.code,
+			title: product.title,
+			description: product?.description,
+			categories: product?.categories,
+			price: product?.price,
+			status: product?.status,
+			seller_id:
+				product?.seller_id && ObjectId.isValid(product?.seller_id)
+					? new ObjectId(product?.seller_id)
+					: undefined,
+			user_id: currentUser._id,
 		})
 
 		const refreshProduct = await ProductService.productDatabase.findOne({
 			_id: insertedProduct.insertedId,
 		})
-		return ProductParser({ content: refreshProduct, hidePrivate: true })
+		ProductService.saveImage({
+			picture: product.picture,
+			productId: product._id?.toString(),
+			userName: currentUser.user_name,
+		})
+		return ProductParser({ content: refreshProduct, hidePrivate: true, currentUser })
 	}
 
 	static update = async ({
@@ -50,29 +89,36 @@ export class ProductService {
 			...product,
 			_id: id,
 		})
-		const valueToSave = JSON.parse(
-			JSON.stringify({
-				...product,
-				_id: undefined,
-				user_id: undefined,
-				created: undefined,
-				updated: DateUtils.dateTimeToString(new Date()),
-			})
-		)
-		valueToSave.seller_id = new ObjectId(valueToSave.seller_id)
 		await ProductService.productDatabase.updateOne(
 			{
 				_id: id,
 			},
 			{
-				$set: valueToSave,
+				$set: {
+					code: product.code,
+					title: product.title,
+					description: product?.description,
+					categories: product?.categories,
+					price: product?.price,
+					status: product?.status,
+					seller_id:
+						product?.seller_id && ObjectId.isValid(product?.seller_id)
+							? new ObjectId(product?.seller_id)
+							: undefined,
+					updated: DateUtils.dateTimeToString(new Date()),
+				},
 			}
 		)
 		const updatedProduct = await ProductService.productDatabase.findOne({
 			_id: id,
 			user_id: currentUser._id,
 		})
-		return ProductParser({ content: updatedProduct, hidePrivate: true })
+		ProductService.saveImage({
+			picture: product.picture,
+			productId: product._id?.toString(),
+			userName: currentUser.user_name,
+		})
+		return ProductParser({ content: updatedProduct, hidePrivate: true, currentUser })
 	}
 
 	static remove = async ({ id, currentUser }: { id: ObjectId; currentUser: UserType }) => {
@@ -89,33 +135,18 @@ export class ProductService {
 	}
 
 	static getAll = async ({ currentUser }: { currentUser: UserType }) => {
-		const allCustomersByUser = await ProductService.productDatabase
-			.aggregate([
-				{
-					$lookup: {
-						from: 'customer',
-						localField: 'seller_id',
-						foreignField: '_id',
-						as: 'seller',
-						pipeline: [
-							{
-								$limit: 1,
-							},
-						],
-					},
-				},
-				{
-					$unwind: '$seller',
-				},
-				{
-					$match: {
-						user_id: currentUser._id,
-					},
-				},
-			])
-			.toArray()
-		return allCustomersByUser.map((product) =>
-			ProductParser({ content: product, hidePrivate: true })
-		)
+		let allProductsByUser = await ProductService.productDatabase.find().toArray()
+
+		const response = []
+		for (const product of allProductsByUser) {
+			product.seller = product.seller_id
+				? await CustomerService.getOne({
+						id: new ObjectId(product.seller_id),
+						currentUser,
+				  })
+				: undefined
+			response.push(ProductParser({ content: product, hidePrivate: true, currentUser }))
+		}
+		return response
 	}
 }

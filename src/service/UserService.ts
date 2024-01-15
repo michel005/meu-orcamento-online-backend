@@ -13,9 +13,10 @@ export class UserService {
 	static userTokenDatabase: Collection
 
 	static saveImage = (picture?: PictureType, userName?: string) => {
+		console.log({ picture, userName })
 		if (picture) {
 			if (picture.type === 'file' && userName) {
-				PictureService.save(picture.value, 'user', userName)
+				PictureService.save(picture.value, 'user', userName, userName)
 			}
 		} else {
 			if (userName) {
@@ -50,7 +51,14 @@ export class UserService {
 	static create = async ({ user }: { user: UserType }) => {
 		UserBusiness.validate(user)
 		await UserService.userDatabase.insertOne({
-			...user,
+			full_name: user.full_name,
+			email: user.email,
+			birthday: user.birthday,
+			phone: user.phone,
+			address: user.address,
+			person_type: user.person_type,
+			document_type: user.document_type,
+			document_number: user.document_number,
 			created: DateUtils.dateTimeToString(new Date()),
 		})
 		UserService.saveImage(user.picture, user.user_name)
@@ -70,6 +78,9 @@ export class UserService {
 					birthday: user.birthday,
 					phone: user.phone,
 					address: user.address,
+					person_type: user.person_type,
+					document_type: user.document_type,
+					document_number: user.document_number,
 					updated: DateUtils.dateTimeToString(new Date()),
 				},
 			}

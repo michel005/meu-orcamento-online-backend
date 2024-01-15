@@ -16,9 +16,16 @@ export const UserParser = (content: any, hidePrivate = false): UserType => {
 	user.email = content?.email || undefined
 	user.phone = content?.phone || undefined
 	user.birthday = content?.birthday || undefined
-	if (content.picture) {
-		user.picture = PictureParser(content.picture, 'user', content.user_name)
-	}
+	user.person_type = content?.person_type || undefined
+	user.document_type = content?.document_type || undefined
+	user.document_number = content?.document_number || undefined
+	user.picture = PictureParser(
+		content.picture,
+		'user',
+		content.user_name,
+		content.user_name,
+		content.updated || content.created
+	)
 	user.address = AddressParser(content?.address || {})
 	return user
 }

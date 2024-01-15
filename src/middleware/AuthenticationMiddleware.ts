@@ -12,7 +12,6 @@ const publicRoutes = [
 	['POST', '/api/user'],
 	['POST', '/api/picture/:type/:identifier'],
 	['DELETE', '/api/picture/:type/:identifier'],
-	['GET', '/api/picture/:type/:identifier'],
 ]
 
 export const AuthenticationMiddleware = (database: Db) => {

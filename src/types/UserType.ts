@@ -12,6 +12,9 @@ export type UserType = {
 	email?: string
 	birthday?: string
 	phone?: string
+	person_type?: string
+	document_type?: string
+	document_number?: string
 	password?: string
 	address?: AddressType
 }
