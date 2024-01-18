@@ -44,6 +44,7 @@ export class UserService {
 			expiration: DateUtils.dateToString(expirationDate),
 		})
 		return {
+			user: UserParser(userFound, true),
 			token,
 		}
 	}
@@ -56,6 +57,8 @@ export class UserService {
 			birthday: user.birthday,
 			phone: user.phone,
 			address: user.address,
+			user_name: user.user_name,
+			password: user.password,
 			person_type: user.person_type,
 			document_type: user.document_type,
 			document_number: user.document_number,
@@ -74,7 +77,6 @@ export class UserService {
 			{
 				$set: {
 					full_name: user.full_name,
-					email: user.email,
 					birthday: user.birthday,
 					phone: user.phone,
 					address: user.address,
