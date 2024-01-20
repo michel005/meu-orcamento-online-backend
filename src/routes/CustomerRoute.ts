@@ -1,8 +1,6 @@
 import express from 'express'
-import { Db, ObjectId } from 'mongodb'
-import { CustomerParser } from '../parser/CustomerParser'
+import { ObjectId } from 'mongodb'
 import { CustomerService } from '../service/CustomerService'
-import { CustomerType } from '../types/CustomerType'
 import { BusinessRouteProcessor } from '../utils/BusinessRouteProcessor'
 import { ErrorUtils } from '../utils/ErrorUtils'
 
