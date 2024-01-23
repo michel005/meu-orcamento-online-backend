@@ -15,5 +15,6 @@
 	"PRODUCT-001": "A situação do produto esta inválida",
 	"PRODUCT-002": "Código já utilizado",
 	"PRODUCT-003": "Produto não encontrado",
-	"PICTURE-001": "Imagem não encontrada"
+	"PICTURE-001": "Imagem não encontrada",
+	"SELL-001": "Venda não encontrada"
 }

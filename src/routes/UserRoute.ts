@@ -1,13 +1,9 @@
 import express from 'express'
-import { Db } from 'mongodb'
 import { UserParser } from '../parser/UserParser'
 import { UserService } from '../service/UserService'
-import { UserType } from '../types/UserType'
 import { BusinessRouteProcessor } from '../utils/BusinessRouteProcessor'
 
-export const UserRoute = (database: Db) => {
-	const userDatabase = database.collection<UserType>('user')
-
+export const UserRoute = () => {
 	return express
 		.Router()
 		.post('/user/login', (req, res) => {
@@ -28,13 +24,6 @@ export const UserRoute = (database: Db) => {
 				return UserService.update({
 					user: req.body,
 					currentUser: (req as any).user,
-				})
-			})
-		})
-		.delete('/user', (req, res) => {
-			BusinessRouteProcessor(res, async () => {
-				await userDatabase.deleteOne({
-					_id: (req as any).user._id,
 				})
 			})
 		})

@@ -15,6 +15,7 @@ import { ProductService } from './service/ProductService'
 import { ProductType } from './types/ProductType'
 import { PictureRoute } from './routes/PictureRoute'
 import { DashboardRoute } from './routes/DashboardRoute'
+import { SellRoute } from './routes/SellRoute'
 
 const client = new MongoClient('mongodb://127.0.0.1:27017')
 const database = client.db('meuOrcamentoOnline')
@@ -36,11 +37,12 @@ server.use(
 	'/api',
 	express
 		.Router()
-		.use(UserRoute(database))
+		.use(UserRoute())
 		.use(DashboardRoute())
 		.use(CustomerRoute())
 		.use(ProductRoute())
 		.use(PictureRoute())
+		.use(SellRoute())
 )
 
 server.listen(8080, () => {
